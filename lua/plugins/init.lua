@@ -41,16 +41,17 @@ return {
 			require("configs.mason-autoinstall")
 		end,
 	},
-	-- LuaSnip configuration
+	--	blink.cmp configuration
 	{
 		"L3MON4D3/LuaSnip",
-		build = "make install_jsregexp",
 		dependencies = {
 			{
 				"rafamadriz/friendly-snippets",
 				config = function()
+					-- VSCode-format snippets
 					require("luasnip.loaders.from_vscode").lazy_load()
-					-- Optionally, load custom snippets from a specific path
+
+					-- Your custom snippets (VSCode format)
 					require("luasnip.loaders.from_vscode").lazy_load({
 						paths = { vim.fn.stdpath("config") .. "/snippets" },
 					})
@@ -59,11 +60,11 @@ return {
 		},
 		opts = {
 			history = true,
-			delete_check_events = "TextChanged",
+			updateevents = "TextChanged,TextChangedI",
 		},
+		config = require("configs.luasnip"),
 	},
 
-	--	blink.cmp configuration
 	{
 		"saghen/blink.cmp",
 		event = "InsertEnter",
