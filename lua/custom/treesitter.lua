@@ -1,0 +1,21 @@
+return {
+	ensure_installed = {
+		"bash",
+		"awk",
+		"fish",
+		"lua",
+		"luadoc",
+		"markdown",
+		"printf",
+		"toml",
+		"vim",
+		"vimdoc",
+		"yaml",
+		"html",
+		"css",
+		"javascript",
+		"bash",
+		"python",
+		"regex",
+	},
+}

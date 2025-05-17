@@ -1,0 +1,23 @@
+return {
+	ensure_installed = {
+		"lua-language-server",
+		"awk-language-server",
+		"bash-language-server",
+		"black",
+		"css-lsp",
+		"html-lsp",
+		"isort",
+		"lua-language-server",
+		"prettierd",
+		"pyright",
+		"shfmt",
+		"stylua",
+		"yaml-language-server",
+		"yamlfmt",
+		"prettier",
+		"termux-language-server",
+		"deno",
+		"harper-ls",
+	},
+	automatic_installation = true,
+}
