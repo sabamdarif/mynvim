@@ -115,7 +115,7 @@ return {
 	},
 	{
 		"nvim-lualine/lualine.nvim",
-		lazy = false,
+		event = "VimEnter",
 		opts = function()
 			return require("configs.lualine")
 		end,
@@ -185,6 +185,7 @@ return {
 	},
 	{
 		"goolord/alpha-nvim",
+		event = "VimEnter",
 		dependencies = {
 			"nvim-tree/nvim-web-devicons",
 			{
@@ -195,11 +196,11 @@ return {
 				},
 			},
 		},
-		event = "VimEnter",
-		opts = function()
-			return require("configs.dashboard").opts
+		config = function()
+			require("configs.dashboard").setup()
 		end,
 	},
+
 	{
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",
@@ -275,7 +276,7 @@ return {
 	},
 	{
 		"dstein64/nvim-scrollview",
-		event = "BufWinEnter",
+		event = "WinScrolled",
 		config = function()
 			require("scrollview").setup({
 				excluded_filetypes = { "nerdtree" },

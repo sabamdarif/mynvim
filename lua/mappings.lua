@@ -20,9 +20,9 @@ map("i", "<C-s>", "<Esc><Cmd>write<CR>", { noremap = true, silent = true, desc =
 map("n", "<C-s>", "<Cmd>write<CR>", { noremap = true, silent = true, desc = "Save file" })
 map("n", "<C-c>", "<cmd>%y+<CR>", { desc = "general copy whole file" })
 
--- map("n", "<leader>n", "<cmd>set nu!<CR>", { desc = "toggle line number" })
 map("n", "<leader>r", "<cmd>set rnu!<CR>", { desc = "toggle relative number" })
 -- map("n", "<leader>ch", "<cmd>NvCheatsheet<CR>", { desc = "toggle nvcheatsheet" })
+map("n", "<leader>l", "<cmd>Lazy<CR>", { desc = "toggle Lazy plugin manager" })
 
 map({ "n", "x" }, "<leader>fm", function()
 	require("conform").format({ lsp_fallback = true })
@@ -33,7 +33,7 @@ map("n", "<Tab>", "<Cmd>BufferLineCycleNext<CR>", {})
 map("n", "<S-Tab>", "<Cmd>BufferLineCyclePrev<CR>", {})
 map("n", "<leader>x", "<cmd>Bdelete!<CR>", { desc = "buffer close", noremap = true, silent = true })
 -- Comment
-map("n", "<leader>/", "gcc", { desc = "toggle comment", remap = true })
+map({ "n", "v" }, "<leader>/", "gc", { desc = "Toggle comment", remap = true })
 
 -- nvimtree
 map("n", "<C-n>", "<cmd>NvimTreeToggle<CR>", { desc = "nvimtree toggle window" })
@@ -107,3 +107,7 @@ map("n", "<leader>tc", function()
 		vim.notify("Disabled Treesitter Context", vim.log.levels.WARN, { title = "Option" })
 	end
 end, { desc = "Toggle Treesitter Context" })
+-- load the last session
+vim.keymap.set("n", "<leader>ql", function()
+	require("persistence").load({ last = true })
+end)
