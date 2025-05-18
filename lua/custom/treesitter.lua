@@ -1,12 +1,13 @@
+---@type TSConfig
 return {
+	highlight = { enable = true },
+	indent = { enable = true },
 	ensure_installed = {
 		"bash",
 		"awk",
-		"fish",
 		"lua",
 		"luadoc",
 		"markdown",
-		"printf",
 		"toml",
 		"vim",
 		"vimdoc",
@@ -14,8 +15,17 @@ return {
 		"html",
 		"css",
 		"javascript",
-		"bash",
 		"python",
 		"regex",
 	},
+	incremental_selection = {
+		enable = true,
+		keymaps = {
+			init_selection = "<C-space>",
+			node_incremental = "<C-space>",
+			scope_incremental = false,
+			node_decremental = "<bs>",
+		},
+	},
+	textobjects = {},
 }

@@ -12,13 +12,6 @@ return {
 		"nvim-tree/nvim-web-devicons",
 	},
 	{
-		"echasnovski/mini.icons",
-		version = false,
-		config = function()
-			require("mini.icons").setup()
-		end,
-	},
-	{
 		"nvim-lua/plenary.nvim",
 	},
 	{
@@ -52,17 +45,17 @@ return {
 					require("luasnip.loaders.from_vscode").lazy_load()
 
 					-- Your custom snippets (VSCode format)
-					require("luasnip.loaders.from_vscode").lazy_load({
-						paths = { vim.fn.stdpath("config") .. "/snippets" },
-					})
+					-- require("luasnip.loaders.from_vscode").lazy_load({
+					-- 	paths = { vim.fn.stdpath("config") .. "/snippets" },
+					-- })
 				end,
 			},
 		},
 		opts = {
 			history = true,
-			updateevents = "TextChanged,TextChangedI",
+			-- updateevents = "TextChanged,TextChangedI",
+			delete_check_events = "TextChanged",
 		},
-		config = require("configs.luasnip"),
 	},
 
 	{
@@ -70,13 +63,14 @@ return {
 		event = "InsertEnter",
 		dependencies = {
 			"L3MON4D3/LuaSnip",
+			"mikavilpas/blink-ripgrep.nvim",
 		},
 		opts = function()
 			return require("configs.blink")
 		end,
-		-- config = function(_, opts)
-		-- 	require("blink.cmp").setup(opts)
-		-- end,
+		config = function(_, opts)
+			require("blink.cmp").setup(opts)
+		end,
 	},
 	{
 		"neovim/nvim-lspconfig",
@@ -124,11 +118,22 @@ return {
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 		event = { "BufReadPost", "BufNewFile" },
-		opts = require("configs.treesitter"),
+		opts = function()
+			return require("custom.treesitter")
+		end,
 		config = function(_, opts)
 			require("nvim-treesitter.configs").setup(opts)
 		end,
 	},
+
+	{
+		"nvim-treesitter/nvim-treesitter-textobjects",
+		lazy = true,
+		config = function()
+			require("configs.treesitter-textobjects")()
+		end,
+	},
+
 	{
 		"lukas-reineke/indent-blankline.nvim",
 		main = "ibl",
@@ -242,14 +247,17 @@ return {
 	{
 		"nvim-treesitter/nvim-treesitter-context",
 		event = { "BufReadPre", "BufNewFile" },
-		opt = function()
-			return require("config.treesitter-context")
+		opts = function()
+			return require("configs.treesitter-context")
 		end,
 	},
 	{ "nvzone/volt", lazy = false },
 	{
 		"nvzone/menu",
-		lazy = false,
+		keys = {
+			{ "<C-t>", mode = "n" },
+			{ "<RightMouse>", mode = { "n", "v" } },
+		},
 		config = function()
 			-- Keyboard users
 			vim.keymap.set("n", "<C-t>", function()
@@ -283,15 +291,6 @@ return {
 				current_only = true,
 				base = "right",
 				column = 1,
-
-				-- only show diagnostics, search highlights, and git hunks
-				signs_on_startup = { "diagnostics", "changelist", "conflicts", "search", "gitsigns" },
-				diagnostics_severities = { vim.diagnostic.severity.ERROR },
-			})
-			require("scrollview.contrib.gitsigns").setup({
-				show_in_folds = true, -- ← place marks at the real LNUM, not fold-top
-				current_only = true, -- optional: only in the active window
-				priority = 10,
 			})
 		end,
 	},

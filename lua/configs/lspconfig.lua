@@ -2,7 +2,9 @@ local lspconfig = require("lspconfig")
 local servers_mod = require("custom.language-servers")
 
 local M = {}
-
+-- ===================================================================
+-- Diagnostic on hover
+-- ===================================================================
 M.on_attach = function(client, bufnr)
 	local diag_hover_enabled = false -- Changed to false by default
 	local group = vim.api.nvim_create_augroup("LspDiagnosticsFloat", { clear = false })
@@ -42,7 +44,9 @@ M.on_attach = function(client, bufnr)
 	vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
 	vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
 end
-
+-- ===================================================================
+-- combile capabilities
+-- ===================================================================
 M.on_init = function(client, _)
 	if client.server_capabilities.semanticTokensProvider then
 		client.server_capabilities.semanticTokensProvider = nil
@@ -55,7 +59,6 @@ M.capabilities.textDocument.foldingRange = {
 	lineFoldingOnly = true,
 }
 
--- if you use blink.cmp, uncomment this line to merge capabilities
 M.capabilities = require("blink.cmp").get_lsp_capabilities(M.capabilities)
 
 -- ===================================================================
