@@ -60,6 +60,7 @@ map(
 	"<cmd>Telescope find_files follow=true no_ignore=true hidden=true<CR>",
 	{ desc = "telescope find all files" }
 )
+map("n", "<leader>th", "<cmd>Telescope colorscheme<CR>", { desc = "telescope git commits" })
 
 -- terminal
 map("t", "<C-x>", "<C-\\><C-N>", { desc = "terminal escape terminal mode" })

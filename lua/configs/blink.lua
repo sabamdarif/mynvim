@@ -152,7 +152,7 @@ return {
 			ripgrep = {
 				module = "blink-ripgrep",
 				name = "Ripgrep",
-				score_offset = 80,
+				score_offset = 70,
 				-- the options below are optional, some default values are shown
 				---@module "blink-ripgrep"
 				---@type blink-ripgrep.Options
@@ -162,7 +162,7 @@ return {
 
 					-- the minimum length of the current word to start searching
 					-- (if the word is shorter than this, the search will not start)
-					prefix_min_len = 3,
+					prefix_min_len = 5,
 
 					-- The number of lines to show around each match in the preview
 					-- (documentation) window. For example, 5 means to show 5 lines
@@ -195,7 +195,7 @@ return {
 					-- accepts. Defaults to "--ignore-case". See `rg --help` for all the
 					-- available options ripgrep supports, but you can try
 					-- "--case-sensitive" or "--smart-case".
-					search_casing = "--ignore-case",
+					search_casing = "--smart-case",
 
 					-- (advanced) Any additional options you want to give to ripgrep.
 					-- See `rg -h` for a list of all available options. Might be
