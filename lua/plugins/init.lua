@@ -12,6 +12,10 @@ return {
 		"nvim-tree/nvim-web-devicons",
 	},
 	{
+		"onsails/lspkind.nvim",
+		lazy = true,
+	},
+	{
 		"nvim-lua/plenary.nvim",
 	},
 	{
@@ -24,6 +28,7 @@ return {
 	},
 	{
 		"williamboman/mason.nvim",
+		build = ":MasonUpdate",
 		cmd = { "Mason", "MasonInstall", "MasonUpdate", "MasonInstallAll" },
 		opts = function()
 			return require("configs.mason")
@@ -205,7 +210,6 @@ return {
 			require("configs.dashboard").setup()
 		end,
 	},
-
 	{
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",
@@ -225,6 +229,7 @@ return {
 	{
 		"folke/which-key.nvim",
 		event = "VeryLazy",
+		enabled = false,
 	},
 	{
 		"CRAG666/code_runner.nvim",
@@ -240,10 +245,18 @@ return {
 			require("custom.code-runner").setup()
 		end,
 	},
-
-	------------------------------------------------------
-	---------        External plugins    -----------------
-	------------------------------------------------------
+	{
+		"dstein64/nvim-scrollview",
+		event = "WinScrolled",
+		config = function()
+			require("scrollview").setup({
+				excluded_filetypes = { "nerdtree" },
+				current_only = true,
+				base = "right",
+				column = 1,
+			})
+		end,
+	},
 	{
 		"nvim-treesitter/nvim-treesitter-context",
 		event = { "BufReadPre", "BufNewFile" },
@@ -251,6 +264,10 @@ return {
 			return require("configs.treesitter-context")
 		end,
 	},
+
+	------------------------------------------------------
+	---------        External plugins    -----------------
+	------------------------------------------------------
 	{ "nvzone/volt", lazy = false },
 	{
 		"nvzone/menu",
@@ -281,18 +298,6 @@ return {
 	{
 		"nvzone/minty",
 		cmd = { "Shades", "Huefy" },
-	},
-	{
-		"dstein64/nvim-scrollview",
-		event = "WinScrolled",
-		config = function()
-			require("scrollview").setup({
-				excluded_filetypes = { "nerdtree" },
-				current_only = true,
-				base = "right",
-				column = 1,
-			})
-		end,
 	},
 	{
 		"karb94/neoscroll.nvim",

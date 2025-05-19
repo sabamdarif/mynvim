@@ -27,6 +27,6 @@ return {
 			colored_indent_levels = true,
 		},
 		treesitter_context = true,
-		which_key = false,
+		which_key = true,
 	},
 }

@@ -33,7 +33,7 @@ map("n", "<Tab>", "<Cmd>BufferLineCycleNext<CR>", {})
 map("n", "<S-Tab>", "<Cmd>BufferLineCyclePrev<CR>", {})
 map("n", "<leader>x", "<cmd>Bdelete!<CR>", { desc = "buffer close", noremap = true, silent = true })
 -- Comment
-map({ "n", "v" }, "<leader>/", "gc", { desc = "Toggle comment", remap = true })
+map({ "n", "v" }, "<leader>/", "gcc", { desc = "Toggle comment", remap = true })
 
 -- nvimtree
 map("n", "<C-n>", "<cmd>NvimTreeToggle<CR>", { desc = "nvimtree toggle window" })

@@ -36,6 +36,55 @@ return {
 	-- (Default) Only show the documentation popup when manually triggered
 	-- see:- https://cmp.saghen.dev/configuration/reference.html
 	completion = {
+		menu = {
+			draw = {
+				components = {
+					kind_icon = {
+						text = function(ctx)
+							local icon = ctx.kind_icon
+							if vim.tbl_contains({ "Path" }, ctx.source_name) then
+								local dev_icon, _ = require("nvim-web-devicons").get_icon(ctx.label)
+								if dev_icon then
+									icon = dev_icon
+								end
+							else
+								icon = require("lspkind").symbolic(ctx.kind, {
+									mode = "symbol",
+								})
+							end
+
+							return icon .. ctx.icon_gap
+						end,
+
+						-- Optionally, use the highlight groups from nvim-web-devicons
+						-- You can also add the same function for `kind.highlight` if you want to
+						-- keep the highlight groups in sync with the icons.
+						-- highlight = function(ctx)
+						-- 	local hl = ctx.kind_hl
+						-- 	if vim.tbl_contains({ "Path" }, ctx.source_name) then
+						-- 		local dev_icon, dev_hl = require("nvim-web-devicons").get_icon(ctx.label)
+						-- 		if dev_icon then
+						-- 			hl = dev_hl
+						-- 		end
+						-- 	end
+						-- 	return hl
+						-- end,
+						highlight = function(ctx)
+							return { { group = ctx.kind_hl } }
+						end,
+					},
+				},
+				columns = {
+					{ "label", "label_description", gap = 1 },
+					{ "kind_icon", "kind", gap = 1 },
+				},
+				treesitter = {
+					"lsp",
+				},
+			},
+			-- border = "single",
+			auto_show = true,
+		},
 		-- 'prefix' will fuzzy match on the text before the cursor
 		-- 'full' will fuzzy match on the text before _and_ after the cursor
 		-- example: 'foo_|_bar' will match 'foo_' for 'prefix' and 'foo__bar' for 'full'
@@ -90,9 +139,13 @@ return {
 		documentation = {
 			auto_show = true,
 			auto_show_delay_ms = 200,
+			-- window = { border = "single" },
 		},
 		-- Display a preview of the selected item on the current line
-		ghost_text = { enabled = false },
+		ghost_text = {
+			enabled = true,
+			show_with_menu = true,
+		},
 	},
 
 	-- Default list of enabled providers defined so that you can extend it
