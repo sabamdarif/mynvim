@@ -4,9 +4,11 @@ return {
 	indent = { enable = true },
 	ensure_installed = {
 		"bash",
+		"c",
 		"awk",
 		"lua",
 		"luadoc",
+		"luap",
 		"markdown",
 		"toml",
 		"vim",
@@ -16,7 +18,10 @@ return {
 		"css",
 		"javascript",
 		"python",
+		"diff",
+		"json",
 		"regex",
+		"xml",
 	},
 	incremental_selection = {
 		enable = true,

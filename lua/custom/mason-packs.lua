@@ -18,6 +18,7 @@ return {
 		"termux-language-server",
 		"deno",
 		"harper-ls",
+		"shellcheck",
 	},
 	automatic_installation = true,
 }

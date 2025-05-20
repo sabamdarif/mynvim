@@ -81,7 +81,8 @@ return {
 					"lsp",
 				},
 			},
-			-- border = "single",
+			scrollbar = false,
+			border = nil, -- "single", "rounded"
 			auto_show = true,
 		},
 		-- 'prefix' will fuzzy match on the text before the cursor

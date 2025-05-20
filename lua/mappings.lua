@@ -78,11 +78,6 @@ for _, mode in ipairs({ "n", "v" }) do
 	map(mode, "<S-ScrollWheelDown>", "<C-d>", { silent = true })
 end
 
--- Insert: wrap <C-y>/<C-e>/<C-u>/<C-d> in a normal! to keep you in insert mode
-map("i", "<ScrollWheelUp>", "<Cmd>normal! <C-y><CR>", { silent = true })
-map("i", "<ScrollWheelDown>", "<Cmd>normal! <C-e><CR>", { silent = true })
-map("i", "<S-ScrollWheelUp>", "<Cmd>normal! <C-u><CR>", { silent = true })
-map("i", "<S-ScrollWheelDown>", "<Cmd>normal! <C-d><CR>", { silent = true })
 -- serach and replace
 map({ "n", "v" }, "<leader>sr", function()
 	local grug = require("grug-far")
@@ -109,7 +104,9 @@ map("n", "<leader>tc", function()
 	end
 end, { desc = "Toggle Treesitter Context" })
 -- load the last session
-vim.keymap.set("n", "<leader>ql", function()
+map("n", "<leader>ql", function()
 	require("persistence").load({ last = true })
 end)
-vim.keymap.set("n", "<C-a>", "ggVG", { noremap = true, silent = true })
+map("n", "<C-a>", "ggVG", { noremap = true, silent = true })
+map("n", "<leader>sv", "<cmd>vsp<cr>", { noremap = true, silent = true })
+map("n", "<leader>sh", "<cmd>sp<cr>", { noremap = true, silent = true })

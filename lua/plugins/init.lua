@@ -114,7 +114,7 @@ return {
 	},
 	{
 		"nvim-lualine/lualine.nvim",
-		event = "VimEnter",
+		event = "VeryLazy",
 		opts = function()
 			return require("configs.lualine")
 		end,
@@ -133,7 +133,7 @@ return {
 
 	{
 		"nvim-treesitter/nvim-treesitter-textobjects",
-		lazy = true,
+		event = { "BufReadPost", "BufNewFile" },
 		config = function()
 			require("configs.treesitter-textobjects")()
 		end,
@@ -195,7 +195,8 @@ return {
 	},
 	{
 		"goolord/alpha-nvim",
-		event = "VimEnter",
+		lazy = false,
+		priority = 1000,
 		dependencies = {
 			"nvim-tree/nvim-web-devicons",
 			{
@@ -247,13 +248,20 @@ return {
 	},
 	{
 		"dstein64/nvim-scrollview",
-		event = "WinScrolled",
+		event = { "BufReadPre", "BufNewFile" },
 		config = function()
 			require("scrollview").setup({
-				excluded_filetypes = { "nerdtree" },
+				excluded_filetypes = { "nerdtree", "NvimTree" },
 				current_only = true,
 				base = "right",
 				column = 1,
+				signs_on_startup = { "diagnostics", "search", "gitsigns" },
+				diagnostics_severities = { vim.diagnostic.severity.ERROR },
+			})
+			require("scrollview.contrib.gitsigns").setup({
+				show_in_folds = true,
+				current_only = true,
+				priority = 10,
 			})
 		end,
 	},
@@ -264,86 +272,22 @@ return {
 			return require("configs.treesitter-context")
 		end,
 	},
-
 	------------------------------------------------------
 	---------        External plugins    -----------------
 	------------------------------------------------------
-	{ "nvzone/volt", lazy = false },
 	{
-		"nvzone/menu",
-		keys = {
-			{ "<C-t>", mode = "n" },
-			{ "<RightMouse>", mode = { "n", "v" } },
-		},
-		config = function()
-			-- Keyboard users
-			vim.keymap.set("n", "<C-t>", function()
-				require("menu").open("default")
-			end, {})
-
-			-- mouse users + nvimtree users!
-			vim.keymap.set({ "n", "v" }, "<RightMouse>", function()
-				require("menu.utils").delete_old_menus()
-
-				vim.cmd.exec('"normal! \\<RightMouse>"')
-
-				-- clicked buf
-				local buf = vim.api.nvim_win_get_buf(vim.fn.getmousepos().winid)
-				local options = vim.bo[buf].ft == "NvimTree" and "nvimtree" or "default"
-
-				require("menu").open(options, { mouse = true })
-			end, {})
-		end,
-	},
-	{
-		"nvzone/minty",
-		cmd = { "Shades", "Huefy" },
-	},
-	{
-		"karb94/neoscroll.nvim",
-		event = "WinScrolled",
-		config = function(_, opts)
-			-- core setup
-			require("neoscroll").setup(opts)
-		end,
-		opts = {
-			mappings = { "<C-u>", "<C-d>", "<C-b>", "<C-f>", "<C-y>", "<C-e>", "zt", "zz", "zb" },
-			easing_function = "cubic",
-			hide_cursor = true,
-			stop_eof = true,
-			respect_scrolloff = true,
-		},
-	},
-	{
-		"tzachar/local-highlight.nvim",
-		event = { "BufReadPost", "BufNewFile" },
-		config = function()
-			require("local-highlight").setup({
-				file_types = {}, -- disable default auto-attach
-				hlgroup = "LocalHighlight",
-				cw_hlgroup = nil,
-				insert_mode = false,
-				min_match_len = 1,
-				highlight_single_match = true,
-				animate = { enabled = false }, -- disable snack animation
-				debounce_timeout = 200,
-			})
-
-			-- Visual mode enter
-			vim.api.nvim_create_autocmd("ModeChanged", {
-				pattern = "*:[vV\x16]*",
-				callback = function()
-					vim.cmd("LocalHighlightOn")
-				end,
-			})
-
-			-- Visual mode exit
-			vim.api.nvim_create_autocmd("ModeChanged", {
-				pattern = "[vV\x16]*:*",
-				callback = function()
-					vim.cmd("LocalHighlightOff")
-				end,
-			})
-		end,
+		"folke/todo-comments.nvim",
+		cmd = { "TodoTrouble", "TodoTelescope" },
+		event = { "BufReadPre", "BufNewFile" },
+		opts = {},
+    -- stylua: ignore
+    keys = {
+      { "]t", function() require("todo-comments").jump_next() end, desc = "Next Todo Comment" },
+      { "[t", function() require("todo-comments").jump_prev() end, desc = "Previous Todo Comment" },
+      { "<leader>xt", "<cmd>Trouble todo toggle<cr>", desc = "Todo (Trouble)" },
+      { "<leader>xT", "<cmd>Trouble todo toggle filter = {tag = {TODO,FIX,FIXME}}<cr>", desc = "Todo/Fix/Fixme (Trouble)" },
+      { "<leader>st", "<cmd>TodoTelescope<cr>", desc = "Todo" },
+      { "<leader>sT", "<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>", desc = "Todo/Fix/Fixme" },
+    },
 	},
 }
