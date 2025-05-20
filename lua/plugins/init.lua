@@ -28,7 +28,7 @@ return {
 	},
 	{
 		"williamboman/mason.nvim",
-		build = ":MasonUpdate",
+		build = ":MasonInstallAll",
 		cmd = { "Mason", "MasonInstall", "MasonUpdate", "MasonInstallAll" },
 		opts = function()
 			return require("configs.mason")
@@ -174,6 +174,14 @@ return {
 		end,
 	},
 	{
+		"sindrets/diffview.nvim",
+		cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewFileHistory" },
+		dependencies = { "nvim-lua/plenary.nvim" },
+		config = function()
+			require("diffview").setup({})
+		end,
+	},
+	{
 		"MagicDuck/grug-far.nvim",
 		config = function(_, opts)
 			require("grug-far").setup(opts)
@@ -279,7 +287,9 @@ return {
 		"folke/todo-comments.nvim",
 		cmd = { "TodoTrouble", "TodoTelescope" },
 		event = { "BufReadPre", "BufNewFile" },
-		opts = {},
+		opts = function()
+			return require("configs.todo-comments")
+		end,
     -- stylua: ignore
     keys = {
       { "]t", function() require("todo-comments").jump_next() end, desc = "Next Todo Comment" },

@@ -27,8 +27,8 @@ M.on_attach = function(client, bufnr)
 	-- Start with diagnostic hover disabled by default
 	disable_diagnostic_hover()
 
-	-- Toggle hover popup with 'dg' keymap
-	vim.keymap.set("n", "dg", function()
+	-- Toggle hover popup with 'leader + d' keymap
+	vim.keymap.set("n", "<leader>d", function()
 		if diag_hover_enabled then
 			disable_diagnostic_hover()
 			vim.notify("Diagnostic hover disabled")
