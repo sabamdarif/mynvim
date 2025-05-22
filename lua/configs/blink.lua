@@ -305,7 +305,7 @@ return {
 		},
 	},
 	fuzzy = {
-		implementation = "prefer_rust_with_warning",
+		implementation = "prefer_rust",
 		-- Frecency tracks the most recently/frequently used items and boosts the score of the item
 		-- Note, this does not apply when using the Lua implementation.
 		use_frecency = true,

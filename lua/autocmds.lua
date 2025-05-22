@@ -1,10 +1,8 @@
 local M = {}
-
 function M.setup()
 	local function augroup(name)
 		return vim.api.nvim_create_augroup("user_" .. name, { clear = true })
 	end
-
 	-- Reload file if changed outside Vim
 	vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
 		group = augroup("checktime"),
@@ -14,7 +12,6 @@ function M.setup()
 			end
 		end,
 	})
-
 	-- Highlight on yank
 	vim.api.nvim_create_autocmd("TextYankPost", {
 		group = augroup("highlight_yank"),
@@ -22,7 +19,6 @@ function M.setup()
 			(vim.hl or vim.highlight).on_yank()
 		end,
 	})
-
 	-- Resize splits when Vim is resized
 	vim.api.nvim_create_autocmd("VimResized", {
 		group = augroup("resize_splits"),
@@ -32,7 +28,6 @@ function M.setup()
 			vim.cmd("tabnext " .. cur)
 		end,
 	})
-
 	-- Go to last edit position when opening a buffer
 	vim.api.nvim_create_autocmd("BufReadPost", {
 		group = augroup("last_loc"),
@@ -49,7 +44,6 @@ function M.setup()
 			end
 		end,
 	})
-
 	-- Close certain filetypes with <q>
 	vim.api.nvim_create_autocmd("FileType", {
 		group = augroup("close_with_q"),
@@ -80,7 +74,6 @@ function M.setup()
 			end, { buffer = ctx.buf, silent = true, desc = "Quit buffer" })
 		end,
 	})
-
 	-- Make man pages unlisted
 	vim.api.nvim_create_autocmd("FileType", {
 		group = augroup("man_unlisted"),
@@ -89,7 +82,6 @@ function M.setup()
 			vim.bo[ctx.buf].buflisted = false
 		end,
 	})
-
 	-- Wrap & spellcheck in text-like filetypes
 	vim.api.nvim_create_autocmd("FileType", {
 		group = augroup("wrap_spell"),
@@ -99,7 +91,6 @@ function M.setup()
 			vim.opt_local.spell = true
 		end,
 	})
-
 	-- Disable conceal for JSON
 	vim.api.nvim_create_autocmd("FileType", {
 		group = augroup("json_conceal"),
@@ -108,7 +99,6 @@ function M.setup()
 			vim.opt_local.conceallevel = 0
 		end,
 	})
-
 	-- Auto-create missing directories on save
 	vim.api.nvim_create_autocmd("BufWritePre", {
 		group = augroup("auto_create_dir"),
@@ -120,6 +110,30 @@ function M.setup()
 			vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
 		end,
 	})
-end
 
+	-- Auto-switch to normal mode when entering NvimTree or neo-tree
+	vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
+		group = augroup("tree_normal_mode"),
+		callback = function(ctx)
+			local tree_filetypes = { "NvimTree", "neo-tree", "nerdtree" }
+
+			if vim.tbl_contains(tree_filetypes, vim.bo[ctx.buf].filetype) then
+				-- If we're in insert mode, escape to normal mode
+				if vim.fn.mode() ~= "n" then
+					vim.cmd("stopinsert")
+					-- Using a vim.schedule here to ensure mode change happens after autocmd completes
+					vim.schedule(function()
+						vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
+					end)
+				end
+			end
+		end,
+	})
+end
+-- Autocmd to refresh highlight when colorscheme changes
+vim.api.nvim_create_autocmd("ColorScheme", {
+	callback = function()
+		vim.api.nvim_set_hl(0, "IndentBlanklineChar", { fg = "#3b4261", nocombine = true })
+	end,
+})
 return M

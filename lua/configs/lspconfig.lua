@@ -3,10 +3,10 @@ local servers_mod = require("custom.language-servers")
 
 local M = {}
 -- ===================================================================
--- Diagnostic on hover
+-- Diagnostic keymaps
 -- ===================================================================
 M.on_attach = function(client, bufnr)
-	local diag_hover_enabled = false -- Changed to false by default
+	local diag_hover_enabled = false -- off by default
 	local group = vim.api.nvim_create_augroup("LspDiagnosticsFloat", { clear = false })
 
 	local function enable_diagnostic_hover()
@@ -24,11 +24,11 @@ M.on_attach = function(client, bufnr)
 		vim.api.nvim_clear_autocmds({ group = group, buffer = bufnr })
 	end
 
-	-- Start with diagnostic hover disabled by default
 	disable_diagnostic_hover()
 
-	-- Toggle hover popup with 'leader + d' keymap
-	vim.keymap.set("n", "<leader>d", function()
+	local map = vim.keymap.set
+
+	map({ "n", "o" }, "<leader>dg", function()
 		if diag_hover_enabled then
 			disable_diagnostic_hover()
 			vim.notify("Diagnostic hover disabled")
@@ -37,13 +37,20 @@ M.on_attach = function(client, bufnr)
 			vim.notify("Diagnostic hover enabled")
 		end
 		diag_hover_enabled = not diag_hover_enabled
-	end, { buffer = bufnr, desc = "Toggle diagnostic hover" })
+	end, { buffer = bufnr, desc = "Toggle diagnostic hover", noremap = true })
 
-	-- Diagnostic navigation keymaps
-	local opts = { buffer = bufnr, silent = true }
-	vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
-	vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
+	local diag_opts = { buffer = bufnr, silent = true }
+	map("n", "[d", vim.diagnostic.goto_prev, diag_opts)
+	map("n", "]d", vim.diagnostic.goto_next, diag_opts)
+
+	local lsp_opts = { buffer = bufnr, silent = true }
+	map("n", "gd", vim.lsp.buf.definition, { buffer = bufnr, desc = "LSP: Go to Definition" })
+	map("n", "gD", vim.lsp.buf.declaration, { buffer = bufnr, desc = "LSP: Go to Declaration" })
+	map("n", "gr", vim.lsp.buf.references, { buffer = bufnr, desc = "LSP: References" })
+	map("n", "<leader>rn", vim.lsp.buf.rename, { buffer = bufnr, desc = "LSP: Rename" })
+	map("n", "<leader>ca", vim.lsp.buf.code_action, { buffer = bufnr, desc = "LSP: Code Action" })
 end
+
 -- ===================================================================
 -- combile capabilities
 -- ===================================================================
@@ -54,9 +61,23 @@ M.on_init = function(client, _)
 end
 
 M.capabilities = vim.lsp.protocol.make_client_capabilities()
-M.capabilities.textDocument.foldingRange = {
-	dynamicRegistration = false,
-	lineFoldingOnly = true,
+
+M.capabilities.textDocument.completion.completionItem = {
+	documentationFormat = { "markdown", "plaintext" },
+	snippetSupport = true,
+	preselectSupport = true,
+	insertReplaceSupport = true,
+	labelDetailsSupport = true,
+	deprecatedSupport = true,
+	commitCharactersSupport = true,
+	tagSupport = { valueSet = { 1 } },
+	resolveSupport = {
+		properties = {
+			"documentation",
+			"detail",
+			"additionalTextEdits",
+		},
+	},
 }
 
 M.capabilities = require("blink.cmp").get_lsp_capabilities(M.capabilities)
@@ -113,7 +134,6 @@ vim.diagnostic.config({
 		prefix = "",
 	},
 	signs = true,
-	underline = true,
 	update_in_insert = false,
 	severity_sort = true,
 	signs = { text = { [x.ERROR] = "󰅙", [x.WARN] = "", [x.INFO] = "󰋼", [x.HINT] = "󰌵" } },

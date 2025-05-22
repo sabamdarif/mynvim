@@ -2,7 +2,15 @@ local M = {}
 
 -- IndentBlankline setup
 M.setup_indent_blankline = function()
+	-- Set highlight group for indent lines
 	vim.api.nvim_set_hl(0, "IndentBlanklineChar", { fg = "#3b4261", nocombine = true })
+
+	-- Keymap to toggle indent lines in current buffer
+	vim.keymap.set("n", "<leader>ug", function()
+		local buf = 0
+		local config = require("ibl.config").get_config(buf)
+		require("ibl").setup_buffer(buf, { enabled = not config.enabled })
+	end, { desc = "Toggle indent lines" })
 
 	require("ibl").setup({
 		indent = {
@@ -19,6 +27,14 @@ M.setup_indent_blankline = function()
 				"neogitstatus",
 				"NvimTree",
 				"Trouble",
+				"lazy",
+				"mason",
+				"notify",
+				"snacks_dashboard",
+				"snacks_notif",
+				"snacks_terminal",
+				"snacks_win",
+				"toggleterm",
 			},
 		},
 	})
@@ -29,19 +45,11 @@ M.setup_mini_indentscope = function()
 	require("mini.indentscope").setup({
 		symbol = "│",
 		options = {
-			-- Type of scope's border: which line(s) with smaller indent to
-			-- categorize as border. Can be one of: 'both', 'top', 'bottom', 'none'.
 			border = "both",
-			-- Whether to use cursor column when computing reference indent.
-			-- Useful to see incremental scopes with horizontal cursor movements.
 			indent_at_cursor = true,
-			-- Whether to first check input line to be a border of adjacent scope.
-			-- Use it if you want to place cursor on function header to get scope of
-			-- its body.
 			try_as_border = true,
 		},
 		draw = {
-			-- Delay (in ms) between event and start of drawing scope indicator
 			delay = 700,
 		},
 	})
@@ -55,7 +63,7 @@ M.setup_mini_indentscope = function()
 			"help",
 			"lazy",
 			"mason",
-			-- "NvimTree",
+			"NvimTree",
 			"notify",
 			"snacks_dashboard",
 			"snacks_notif",
@@ -69,5 +77,10 @@ M.setup_mini_indentscope = function()
 		end,
 	})
 end
+
+-- Keymap for Telescope colorscheme picker with preview
+vim.keymap.set("n", "<leader>th", function()
+	require("telescope.builtin").colorscheme({ enable_preview = true })
+end, { desc = "Telescope colorscheme with preview" })
 
 return M

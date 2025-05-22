@@ -58,7 +58,7 @@ return {
 		},
 		opts = {
 			history = true,
-			-- updateevents = "TextChanged,TextChangedI",
+			updateevents = "TextChanged,TextChangedI",
 			delete_check_events = "TextChanged",
 		},
 	},
@@ -70,11 +70,13 @@ return {
 			"L3MON4D3/LuaSnip",
 			"mikavilpas/blink-ripgrep.nvim",
 		},
-		opts = function()
-			return require("configs.blink")
-		end,
+		version = "1.*",
+		---@module 'blink.cmp'
 		config = function(_, opts)
 			require("blink.cmp").setup(opts)
+		end,
+		opts = function()
+			return require("configs.blink")
 		end,
 	},
 	{
@@ -88,7 +90,9 @@ return {
 	{
 		"stevearc/conform.nvim",
 		event = "BufWritePre",
-		opts = require("custom.conform"),
+		opts = function()
+			return require("custom.conform")
+		end,
 	},
 	{
 		"nvim-telescope/telescope.nvim",
@@ -115,9 +119,7 @@ return {
 	{
 		"nvim-lualine/lualine.nvim",
 		event = "VeryLazy",
-		opts = function()
-			return require("configs.lualine")
-		end,
+		opts = require("configs.lualine"),
 	},
 	{
 		"nvim-treesitter/nvim-treesitter",
@@ -284,20 +286,14 @@ return {
 	---------        External plugins    -----------------
 	------------------------------------------------------
 	{
-		"folke/todo-comments.nvim",
-		cmd = { "TodoTrouble", "TodoTelescope" },
+		"catgoose/nvim-colorizer.lua",
+		event = "BufReadPre",
+	},
+	{
+		"MeanderingProgrammer/render-markdown.nvim",
 		event = { "BufReadPre", "BufNewFile" },
 		opts = function()
-			return require("configs.todo-comments")
+			return require("configs.render-markdown")
 		end,
-    -- stylua: ignore
-    keys = {
-      { "]t", function() require("todo-comments").jump_next() end, desc = "Next Todo Comment" },
-      { "[t", function() require("todo-comments").jump_prev() end, desc = "Previous Todo Comment" },
-      { "<leader>xt", "<cmd>Trouble todo toggle<cr>", desc = "Todo (Trouble)" },
-      { "<leader>xT", "<cmd>Trouble todo toggle filter = {tag = {TODO,FIX,FIXME}}<cr>", desc = "Todo/Fix/Fixme (Trouble)" },
-      { "<leader>st", "<cmd>TodoTelescope<cr>", desc = "Todo" },
-      { "<leader>sT", "<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>", desc = "Todo/Fix/Fixme" },
-    },
 	},
 }

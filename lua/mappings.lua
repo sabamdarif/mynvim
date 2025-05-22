@@ -21,7 +21,6 @@ map("n", "<C-s>", "<Cmd>write<CR>", { noremap = true, silent = true, desc = "Sav
 map("n", "<C-c>", "<cmd>%y+<CR>", { desc = "general copy whole file" })
 
 map("n", "<leader>r", "<cmd>set rnu!<CR>", { desc = "toggle relative number" })
--- map("n", "<leader>ch", "<cmd>NvCheatsheet<CR>", { desc = "toggle nvcheatsheet" })
 map("n", "<leader>l", "<cmd>Lazy<CR>", { desc = "toggle Lazy plugin manager" })
 
 map({ "n", "x" }, "<leader>fm", function()
@@ -36,7 +35,7 @@ map("n", "<leader>x", "<cmd>Bdelete!<CR>", { desc = "buffer close", noremap = tr
 map({ "n", "v" }, "<leader>/", "gcc", { desc = "Toggle comment", remap = true })
 
 -- nvimtree
-map("n", "<C-n>", "<cmd>NvimTreeToggle<CR>", { desc = "nvimtree toggle window" })
+map({ "n", "v", "i" }, "<C-n>", "<cmd>NvimTreeToggle<CR>", { remap = true, desc = "nvimtree toggle window" })
 
 -- telescope
 map("n", "<leader>fg", "<cmd>Telescope live_grep<CR>", { desc = "Grep through files" })
@@ -60,7 +59,10 @@ map(
 	"<cmd>Telescope find_files follow=true no_ignore=true hidden=true<CR>",
 	{ desc = "telescope find all files" }
 )
-map("n", "<leader>th", "<cmd>Telescope colorscheme<CR>", { desc = "telescope git commits" })
+-- Keymap for Telescope colorscheme picker with preview
+map("n", "<leader>th", function()
+	require("telescope.builtin").colorscheme({ enable_preview = true })
+end, { desc = "Telescope colorscheme with preview" })
 
 -- terminal
 map("t", "<C-x>", "<C-\\><C-N>", { desc = "terminal escape terminal mode" })

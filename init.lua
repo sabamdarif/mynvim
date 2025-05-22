@@ -13,11 +13,11 @@ end
 vim.opt.rtp:prepend(lazypath)
 local lazy_config = require("configs.lazy")
 require("options")
+-- load autocmds
+require("autocmds").setup()
 require("lazy").setup("plugins", lazy_config)
 vim.schedule(function()
 	require("mappings")
 end)
--- load autocmds
-require("autocmds").setup()
 -- set color scheme
 vim.cmd.colorscheme("catppuccin")

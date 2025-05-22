@@ -1,4 +1,4 @@
-local options = {
+return {
 	formatters_by_ft = {
 		lua = { "stylua" },
 		css = { "prettierd" },
@@ -18,30 +18,12 @@ local options = {
 		-- Configure if and when LSP should be used for formatting. Defaults to "never".
 		lsp_format = "fallback",
 	},
+	-- Set the log level. Use `:ConformInfo` to see the location of the log file.
+	log_level = vim.log.levels.ERROR,
+	-- Conform will notify you when a formatter errors
+	notify_on_error = true,
+	-- Conform will notify you when no formatters are available for the buffer
+	notify_no_formatters = true,
 	-- The options you set here will be merged with the builtin formatters.
 	-- You can also define any custom formatters here.
-	formatters = {
-		injected = { options = { ignore_errors = true } },
-		-- # Example of using dprint only when a dprint.json file is present
-		-- dprint = {
-		--   condition = function(ctx)
-		--     return vim.fs.find({ "dprint.json" }, { path = ctx.filename, upward = true })[1]
-		--   end,
-		-- },
-		--
-		-- # Example of using shfmt with extra args
-		-- shfmt = {
-		--   prepend_args = { "-i", "2", "-ci" },
-		-- },
-	},
-	-- Add error handling hooks for formatters
-	-- format_after_save = function(bufnr)
-	-- This function will run after formatting
-	-- You can add custom logic here if needed
-	-- if vim.bo[bufnr].filetype == "bash" or vim.bo[bufnr].filetype == "sh" then
-	-- 	-- Add specific logic for bash files if needed
-	-- end
-	-- end,
 }
-
-return options

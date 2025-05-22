@@ -11,6 +11,9 @@ M.setup = function()
 ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
 ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝
   ]]
+	vim.api.nvim_create_user_command("ColorschemeWithPreview", function()
+		require("telescope.builtin").colorscheme({ enable_preview = true })
+	end, {})
 
 	dashboard.section.header.val = vim.split(logo, "\n")
 
@@ -18,7 +21,7 @@ M.setup = function()
 		dashboard.button("ff", "  Find file", "<cmd>Telescope find_files<cr>"),
 		dashboard.button("r", "  Recent files", "<cmd>Telescope oldfiles<cr>"),
 		dashboard.button("n", "  New file", "<cmd> ene <BAR> startinsert <cr>"),
-		dashboard.button("th", "󱥚  Themes", "<cmd> Telescope colorscheme<cr>"),
+		dashboard.button("th", "󱥚  Themes", "<cmd>ColorschemeWithPreview<cr>"),
 		dashboard.button("s", "󰁯  Restore session", "<cmd>lua require('persistence').load()<cr>"),
 		dashboard.button("l", "󰒲  Lazy", "<cmd> Lazy <cr>"),
 		dashboard.button("q", "  Quit", "<cmd> qa <cr>"),

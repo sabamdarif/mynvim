@@ -22,6 +22,7 @@ return {
 		"json",
 		"regex",
 		"xml",
+		"latex",
 	},
 	incremental_selection = {
 		enable = true,

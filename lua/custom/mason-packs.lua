@@ -15,7 +15,6 @@ return {
 		"yaml-language-server",
 		"yamlfmt",
 		"prettier",
-		"termux-language-server",
 		"deno",
 		"harper-ls",
 		"shellcheck",
