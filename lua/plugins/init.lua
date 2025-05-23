@@ -79,6 +79,7 @@ return {
 			return require("configs.blink")
 		end,
 	},
+
 	{
 		"neovim/nvim-lspconfig",
 		dependencies = { "saghen/blink.cmp" },
@@ -89,9 +90,12 @@ return {
 	},
 	{
 		"stevearc/conform.nvim",
-		event = "BufWritePre",
+		event = { "BufWritePre" },
 		opts = function()
-			return require("custom.conform")
+			return require("configs.conform")
+		end,
+		config = function(_, opts)
+			require("conform").setup(opts)
 		end,
 	},
 	{

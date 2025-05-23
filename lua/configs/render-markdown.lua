@@ -1,4 +1,4 @@
--- configs/render-markdown.lua
+-- based on https://github.com/linkarzu/dotfiles-latest/blob/main/neovim/neobean/lua/plugins/render-markdown.lua
 
 -- Function to get colors dynamically from current theme
 local function get_theme_colors()
