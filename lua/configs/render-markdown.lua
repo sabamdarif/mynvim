@@ -1,158 +1,19 @@
--- based on https://github.com/linkarzu/dotfiles-latest/blob/main/neovim/neobean/lua/plugins/render-markdown.lua
+-- get help from:- https://github.com/linkarzu/dotfiles-latest/blob/main/neovim/neobean/lua/plugins/render-markdown.lua
 
--- Function to get colors dynamically from current theme
-local function get_theme_colors()
-	local colors = {}
-
-	-- Try to get colors from various highlight groups
-	local function get_hl_color(group, attr)
-		local hl = vim.api.nvim_get_hl(0, { name = group })
-		if attr == "fg" then
-			return hl.fg and string.format("#%06x", hl.fg) or nil
-		elseif attr == "bg" then
-			return hl.bg and string.format("#%06x", hl.bg) or nil
-		end
-	end
-
-	-- Define fallback color palette (works with most themes)
-	local fallbacks = {
-		-- Background colors for headings (lighter variants)
-		bg1 = "#fb4934", -- Red
-		bg2 = "#b8bb26", -- Green
-		bg3 = "#fabd2f", -- Yellow
-		bg4 = "#83a598", -- Blue
-		bg5 = "#d3869b", -- Purple
-		bg6 = "#8ec07c", -- Cyan
-
-		-- Foreground colors (darker for readability)
-		fg1 = "#1d2021", -- Dark for red bg
-		fg2 = "#1d2021", -- Dark for green bg
-		fg3 = "#1d2021", -- Dark for yellow bg
-		fg4 = "#1d2021", -- Dark for blue bg
-		fg5 = "#1d2021", -- Dark for purple bg
-		fg6 = "#1d2021", -- Dark for cyan bg
-
-		-- Normal text
-		normal_fg = "#ebdbb2",
-		normal_bg = "#282828",
-
-		-- Code inline
-		code_bg = "#3c3836",
-		code_fg = "#fe8019",
-	}
-
-	-- Try to get theme-specific colors, fallback to defaults
-	colors.normal_bg = get_hl_color("Normal", "bg") or fallbacks.normal_bg
-	colors.normal_fg = get_hl_color("Normal", "fg") or fallbacks.normal_fg
-
-	-- Get accent colors from different highlight groups
-	colors.red = get_hl_color("DiagnosticError", "fg") or get_hl_color("ErrorMsg", "fg") or fallbacks.bg1
-	colors.green = get_hl_color("DiagnosticOk", "fg") or get_hl_color("String", "fg") or fallbacks.bg2
-	colors.yellow = get_hl_color("DiagnosticWarn", "fg") or get_hl_color("Warning", "fg") or fallbacks.bg3
-	colors.blue = get_hl_color("DiagnosticInfo", "fg") or get_hl_color("Function", "fg") or fallbacks.bg4
-	colors.purple = get_hl_color("DiagnosticHint", "fg") or get_hl_color("Keyword", "fg") or fallbacks.bg5
-	colors.cyan = get_hl_color("DiagnosticHint", "fg") or get_hl_color("Type", "fg") or fallbacks.bg6
-
-	-- Code highlighting
-	colors.code_bg = get_hl_color("CursorLine", "bg") or fallbacks.code_bg
-	colors.code_fg = get_hl_color("Constant", "fg") or fallbacks.code_fg
-
-	return colors
-end
-
--- Setup highlight groups
-local function setup_highlights()
-	local colors = get_theme_colors()
-
-	-- Check if transparent backgrounds are preferred
-	local transparent_bg = vim.g.md_heading_bg == "transparent"
-
-	if transparent_bg then
-		-- For transparent mode: use background colors as foreground (text color)
-		-- and set background to match normal background or transparent
-		local heading_configs = {
-			{ fg = colors.red, bg = colors.normal_bg },
-			{ fg = colors.green, bg = colors.normal_bg },
-			{ fg = colors.yellow, bg = colors.normal_bg },
-			{ fg = colors.blue, bg = colors.normal_bg },
-			{ fg = colors.purple, bg = colors.normal_bg },
-			{ fg = colors.cyan, bg = colors.normal_bg },
-		}
-
-		for i = 1, 6 do
-			-- Background highlight (for the heading text area)
-			vim.api.nvim_set_hl(0, "Headline" .. i .. "Bg", {
-				fg = heading_configs[i].fg,
-				bg = heading_configs[i].bg,
-			})
-			-- Foreground highlight (for icons and signs)
-			vim.api.nvim_set_hl(0, "Headline" .. i .. "Fg", {
-				fg = heading_configs[i].fg,
-				bold = true,
-			})
-		end
-	else
-		-- For colored backgrounds: use bright colors as background with dark text
-		local heading_configs = {
-			{ fg = "#1d2021", bg = colors.red },
-			{ fg = "#1d2021", bg = colors.green },
-			{ fg = "#1d2021", bg = colors.yellow },
-			{ fg = "#1d2021", bg = colors.blue },
-			{ fg = "#1d2021", bg = colors.purple },
-			{ fg = "#1d2021", bg = colors.cyan },
-		}
-
-		for i = 1, 6 do
-			-- Background highlight (colored background with dark text for readability)
-			vim.api.nvim_set_hl(0, "Headline" .. i .. "Bg", {
-				fg = heading_configs[i].fg,
-				bg = heading_configs[i].bg,
-			})
-			-- Foreground highlight (for icons, using the same color as background)
-			vim.api.nvim_set_hl(0, "Headline" .. i .. "Fg", {
-				fg = heading_configs[i].bg,
-				bold = true,
-			})
-		end
-	end
-
-	-- Inline code highlighting
-	vim.api.nvim_set_hl(0, "RenderMarkdownCodeInline", {
-		fg = colors.code_fg,
-		bg = colors.code_bg,
-	})
-
-	-- Table highlighting
-	vim.api.nvim_set_hl(0, "RenderMarkdownTableHead", {
-		fg = colors.normal_fg,
-		bg = colors.code_bg,
-		bold = true,
-	})
-	vim.api.nvim_set_hl(0, "RenderMarkdownTableRow", {
-		fg = colors.normal_fg,
-	})
-	vim.api.nvim_set_hl(0, "RenderMarkdownTableFill", {
-		fg = colors.blue,
-	})
-end
-
--- Auto-setup highlights when colorscheme changes
-vim.api.nvim_create_autocmd("ColorScheme", {
-	group = vim.api.nvim_create_augroup("RenderMarkdownHighlights", { clear = true }),
-	callback = setup_highlights,
-})
-
--- Setup highlights immediately
-setup_highlights()
-
--- Return the plugin configuration
 return {
+	completions = {
+		-- Settings for blink.cmp completions source
+		blink = { enabled = true },
+		-- Settings for coq_nvim completions source
+		coq = { enabled = false },
+		-- Settings for in-process language server completions
+		lsp = { enabled = true },
+	},
 	bullet = {
 		enabled = true,
 	},
 	checkbox = {
 		enabled = true,
-		position = "inline",
 		unchecked = {
 			icon = "   󰄱 ",
 			highlight = "RenderMarkdownUnchecked",
@@ -171,32 +32,95 @@ return {
 		},
 	},
 	link = {
-		-- Adjust icon based on your preference or terminal capabilities
+		-- Inlined with 'image' elements.
 		image = "󰥶 ",
+		-- Inlined with 'email_autolink' elements.
+		email = "󰀓 ",
+		-- Fallback icon for 'inline_link' and 'uri_autolink' elements.
+		hyperlink = "󰌹 ",
 		custom = {
+			discord = { pattern = "discord%.com", icon = "󰙯 " },
+			github = { pattern = "github%.com", icon = "󰊤 " },
+			gitlab = { pattern = "gitlab%.com", icon = "󰮠 " },
+			google = { pattern = "google%.com", icon = "󰊭 " },
+			reddit = { pattern = "reddit%.com", icon = "󰑍 " },
+			stackoverflow = { pattern = "stackoverflow%.com", icon = "󰓌 " },
+			wikipedia = { pattern = "wikipedia%.org", icon = "󰖬 " },
 			youtu = { pattern = "youtu%.be", icon = "󰗃 " },
 		},
 	},
 	heading = {
 		sign = false,
-		-- Only color the text width, not entire line
+		-- Width of the heading background.
+		-- | block | width of the heading text |
+		-- | full  | full width of the window  |
+		-- Can also be a list of the above values evaluated by `clamp(value, context.level)`.
 		width = "block", -- This ensures only the heading text gets colored, not the full line
 		icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
 		backgrounds = {
-			"Headline1Bg",
-			"Headline2Bg",
-			"Headline3Bg",
-			"Headline4Bg",
-			"Headline5Bg",
-			"Headline6Bg",
+			"RenderMarkdownH1Bg",
+			"RenderMarkdownH2Bg",
+			"RenderMarkdownH3Bg",
+			"RenderMarkdownH4Bg",
+			"RenderMarkdownH5Bg",
+			"RenderMarkdownH6Bg",
 		},
+		-- Highlight for the heading and sign icons.
+		-- Output is evaluated using the same logic as 'backgrounds'.
 		foregrounds = {
-			"Headline1Fg",
-			"Headline2Fg",
-			"Headline3Fg",
-			"Headline4Fg",
-			"Headline5Fg",
-			"Headline6Fg",
+			"RenderMarkdownH1",
+			"RenderMarkdownH2",
+			"RenderMarkdownH3",
+			"RenderMarkdownH4",
+			"RenderMarkdownH5",
+			"RenderMarkdownH6",
 		},
+	},
+	pipe_table = {
+		-- Turn on / off pipe table rendering.
+		enabled = true,
+		-- Additional modes to render pipe tables.
+		render_modes = false,
+		-- Pre configured settings largely for setting table border easier.
+		-- | heavy  | use thicker border characters     |
+		-- | double | use double line border characters |
+		-- | round  | use round border corners          |
+		-- | none   | does nothing                      |
+		preset = "heavy",
+		-- Determines how the table as a whole is rendered.
+		-- | none   | disables all rendering                                                  |
+		-- | normal | applies the 'cell' style rendering to each row of the table             |
+		-- | full   | normal + a top & bottom line that fill out the table when lengths match |
+		style = "full",
+		-- Determines how individual cells of a table are rendered.
+		-- | overlay | writes completely over the table, removing conceal behavior and highlights |
+		-- | raw     | replaces only the '|' characters in each row, leaving the cells unmodified |
+		-- | padded  | raw + cells are padded to maximum visual width for each column             |
+		-- | trimmed | padded except empty space is subtracted from visual width calculation      |
+		cell = "padded",
+		-- Amount of space to put between cell contents and border.
+		padding = 2,
+		-- Minimum column width to use for padded or trimmed cell.
+		min_width = 5,
+        -- Characters used to replace table border.
+        -- Correspond to top(3), delimiter(3), bottom(3), vertical, & horizontal.
+        -- stylua: ignore
+        border = {
+            '┌', '┬', '┐',
+            '├', '┼', '┤',
+            '└', '┴', '┘',
+            '│', '─',
+        },
+		-- Always use virtual lines for table borders instead of attempting to use empty lines.
+		-- Will be automatically enabled if indentation module is enabled.
+		border_virtual = false,
+		-- Gets placed in delimiter row for each column, position is based on alignment.
+		alignment_indicator = "━",
+		-- Highlight for table heading, delimiter, and the line above.
+		head = "RenderMarkdownTableHead",
+		-- Highlight for everything else, main table rows and the line below.
+		row = "RenderMarkdownTableRow",
+		-- Highlight for inline padding used to add back concealed space.
+		filler = "RenderMarkdownTableFill",
 	},
 }

@@ -10,6 +10,7 @@ return {
 		"luadoc",
 		"luap",
 		"markdown",
+		"markdown_inline",
 		"toml",
 		"vim",
 		"vimdoc",

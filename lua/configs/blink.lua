@@ -154,7 +154,7 @@ return {
 				name = "lsp",
 				enabled = true,
 				module = "blink.cmp.sources.lsp",
-				min_keyword_length = 2,
+				min_keyword_length = 1, -- Show completion after typing 1 character
 				-- When linking markdown notes, I would get snippets and text in the
 				-- suggestions, I want those to show only if there are no LSP
 				-- suggestions
@@ -169,7 +169,7 @@ return {
 				name = "snippets",
 				enabled = true,
 				max_items = 15,
-				min_keyword_length = 2,
+				min_keyword_length = 1, -- Show completion after typing 1 character
 				module = "blink.cmp.sources.snippets",
 				score_offset = 95, -- Higher than buffer
 			},
@@ -178,7 +178,7 @@ return {
 				enabled = true,
 				max_items = 3,
 				module = "blink.cmp.sources.buffer",
-				min_keyword_length = 2,
+				min_keyword_length = 1, -- Show completion after typing 1 character
 				score_offset = 90, -- Lower than snippets
 			},
 			ripgrep = {
@@ -287,7 +287,7 @@ return {
 				-- suggestions, I want those to show only if there are no path
 				-- suggestions
 				fallbacks = { "snippets", "buffer" },
-				-- min_keyword_length = 2,
+				min_keyword_length = 2, -- Show completion after typing 2 character
 				opts = {
 					trailing_slash = false,
 					label_trailing_slash = true,

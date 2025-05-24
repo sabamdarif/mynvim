@@ -18,6 +18,8 @@ return {
 		gitsigns = true,
 		nvimtree = true,
 		treesitter = true,
+		treesitter_context = true,
+		which_key = true,
 		notify = true,
 		grug_far = true,
 		mason = true,
@@ -26,7 +28,5 @@ return {
 			scope_color = "", -- catppuccin color (eg. `lavender`) Default: text
 			colored_indent_levels = true,
 		},
-		treesitter_context = true,
-		which_key = true,
 	},
 }
