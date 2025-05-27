@@ -1,7 +1,6 @@
 return {
 	ensure_installed = {
 		"lua-language-server",
-		"awk-language-server",
 		"bash-language-server",
 		"black",
 		"css-lsp",
@@ -15,7 +14,6 @@ return {
 		"yaml-language-server",
 		"yamlfmt",
 		"prettier",
-		"deno",
 		"harper-ls",
 		"shellcheck",
 	},

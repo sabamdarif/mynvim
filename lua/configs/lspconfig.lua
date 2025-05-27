@@ -98,31 +98,41 @@ M.capabilities = require("blink.cmp").get_lsp_capabilities(M.capabilities)
 -- 	end
 -- end
 -- ===================================================================
--- NEW, methode by using vim.lsp.enable, ( nvim )v.11+ required
+-- NEW, method by using vim.lsp.enable, ( nvim v.11+ required )
 -- ===================================================================
 local servers = servers_mod.servers
-vim.lsp.enable(servers)
--- ===================================================================
--- override yamlls with extra settings & schemas
--- ===================================================================
-if lspconfig.yamlls then
-	lspconfig.yamlls.setup({
+
+-- Configure all servers with your custom settings FIRST
+for _, server in ipairs(servers) do
+	vim.lsp.config(server, {
 		on_attach = M.on_attach,
 		on_init = M.on_init,
 		capabilities = M.capabilities,
-		settings = {
-			yaml = {
-				validate = true,
-				hover = true,
-				completion = true,
-				schemas = {
-					["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
-					["https://json.schemastore.org/kustomization.json"] = "kustomization.yaml",
-				},
-			},
-		},
 	})
 end
+
+-- Now enable all configured servers
+vim.lsp.enable(servers)
+
+-- ===================================================================
+-- override yamlls with extra settings & schemas
+-- ===================================================================
+vim.lsp.config("yamlls", {
+	on_attach = M.on_attach,
+	on_init = M.on_init,
+	capabilities = M.capabilities,
+	settings = {
+		yaml = {
+			validate = true,
+			hover = true,
+			completion = true,
+			schemas = {
+				["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
+				["https://json.schemastore.org/kustomization.json"] = "kustomization.yaml",
+			},
+		},
+	},
+})
 
 -- ===================================================================
 -- diagnostic, signs, icons
@@ -130,15 +140,15 @@ end
 local x = vim.diagnostic.severity
 
 vim.diagnostic.config({
-	virtual_text = {
-		prefix = "",
-	},
-	signs = true,
-	update_in_insert = false,
-	severity_sort = true,
+	virtual_text = { prefix = "" },
 	signs = { text = { [x.ERROR] = "󰅙", [x.WARN] = "", [x.INFO] = "󰋼", [x.HINT] = "󰌵" } },
 	underline = true,
 	float = { border = "single" },
 })
+
+-- ===================================================================
+-- Setup LSP Auto-Restart
+-- ===================================================================
+require("utils.lsp-restart")
 
 return M

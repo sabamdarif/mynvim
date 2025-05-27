@@ -42,25 +42,16 @@ return {
 	--	blink.cmp configuration
 	{
 		"L3MON4D3/LuaSnip",
-		dependencies = {
-			{
-				"rafamadriz/friendly-snippets",
-				config = function()
-					-- VSCode-format snippets
-					require("luasnip.loaders.from_vscode").lazy_load()
-
-					-- Your custom snippets (VSCode format)
-					-- require("luasnip.loaders.from_vscode").lazy_load({
-					-- 	paths = { vim.fn.stdpath("config") .. "/snippets" },
-					-- })
-				end,
-			},
-		},
+		dependencies = { "rafamadriz/friendly-snippets" },
 		opts = {
 			history = true,
 			updateevents = "TextChanged,TextChangedI",
 			delete_check_events = "TextChanged",
 		},
+		config = function(_, opts)
+			require("luasnip").config.set_config(opts)
+			require("configs.luasnip")
+		end,
 	},
 	{
 		"saghen/blink.cmp",
@@ -278,9 +269,6 @@ return {
 			return require("configs.treesitter-context")
 		end,
 	},
-	------------------------------------------------------
-	---------        External plugins    -----------------
-	------------------------------------------------------
 	{
 		"catgoose/nvim-colorizer.lua",
 		event = "BufReadPre",
@@ -292,6 +280,9 @@ return {
 			return require("configs.render-markdown")
 		end,
 	},
+	------------------------------------------------------
+	---------        External plugins    -----------------
+	------------------------------------------------------
 	{
 		"folke/todo-comments.nvim",
 		cmd = { "TodoTrouble", "TodoTelescope" },
@@ -299,14 +290,12 @@ return {
 		opts = function()
 			return require("configs.todo-comments")
 		end,
-    -- stylua: ignore
-    keys = {
-      { "]t", function() require("todo-comments").jump_next() end, desc = "Next Todo Comment" },
-      { "[t", function() require("todo-comments").jump_prev() end, desc = "Previous Todo Comment" },
-      { "<leader>xt", "<cmd>Trouble todo toggle<cr>", desc = "Todo (Trouble)" },
-      { "<leader>xT", "<cmd>Trouble todo toggle filter = {tag = {TODO,FIX,FIXME}}<cr>", desc = "Todo/Fix/Fixme (Trouble)" },
-      { "<leader>st", "<cmd>TodoTelescope<cr>", desc = "Todo" },
-      { "<leader>sT", "<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>", desc = "Todo/Fix/Fixme" },
-    },
+	},
+	{
+		"brianhuster/live-preview.nvim",
+		event = "VeryLazy",
+		dependencies = {
+			"nvim-telescope/telescope.nvim",
+		},
 	},
 }

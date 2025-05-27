@@ -7,7 +7,6 @@ M.servers = {
 	"bashls",
 	"pyright",
 	-- "ruff",
-	"awk_ls",
 	"yamlls",
 	"lua_ls",
 	-- "harper_ls",
