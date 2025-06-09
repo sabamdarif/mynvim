@@ -9,6 +9,7 @@ M.servers = {
 	-- "ruff",
 	"yamlls",
 	"lua_ls",
+	"lemminx",
 	-- "harper_ls",
 }
 

@@ -6,7 +6,7 @@ local M = {}
 M.formatters_by_ft = formatters_by_ft
 
 M.format_on_save = {
-	timeout_ms = 3000,
+	-- timeout_ms = 3000, -- No timeout: allow formatting to take as long as needed
 	-- If true the method won't block. Defaults to false. If the buffer is modified before the formatter completes, the formatting will be discarded.
 	async = false,
 	-- Don't show any notifications for warnings or failures. Defaults to false.

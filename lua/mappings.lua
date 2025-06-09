@@ -70,9 +70,6 @@ map({ "n", "x" }, "<leader>fm", function()
 	require("conform").format({ lsp_fallback = true })
 end, { desc = "Format file" })
 
--- ============  Commenting =============
-map({ "n", "v" }, "<leader>/", "gcc", { desc = "Toggle comment", remap = true })
-
 -- ============  Terminal Mode =============
 map("t", "<C-x>", "<C-\\><C-N>", { desc = "Exit terminal mode" })
 
@@ -166,3 +163,30 @@ map(
 )
 map("n", "<leader>st", "<cmd>TodoTelescope<cr>", { desc = "Todo" })
 map("n", "<leader>sT", "<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>", { desc = "Todo/Fix/Fixme" })
+
+-- ============  Commenting =============
+map({ "n", "v" }, "<leader>/", "gcc", { desc = "Toggle comment", remap = true })
+map({ "n", "v" }, "<C-/>", "gcc", { desc = "Toggle comment", remap = true })
+
+-- ============ 󰆴 Normal Mode Delete Word (No Yank) =============
+map({ "n", "v" }, "<Del>", '"_dw', { noremap = true, silent = true, desc = "Delete word (no yank)" })
+
+-- ============  VS Code-Like Keybindings =============
+
+-- Undo / Redo
+map("i", "<C-z>", "<Esc>ua", { noremap = true, desc = "Undo in insert mode" })
+map("n", "<C-z>", "u", { noremap = true, desc = "Undo" })
+
+-- Redo (note: <C-r> is redo in normal mode)
+map("i", "<C-S-z>", "<Esc><C-r>a", { noremap = true, desc = "Redo in insert mode" })
+map("n", "<C-S-z>", "<C-r>", { noremap = true, desc = "Redo" })
+
+-- Delete word
+map("i", "<C-BS>", "<C-w>", { desc = "Delete previous word" })
+map("i", "<C-Del>", "<C-o>dw", { desc = "Delete next word" })
+
+-- Clipboard-like behavior
+map("v", "<C-x>", '"+d', { noremap = true, desc = "Cut to clipboard" })
+map("v", "<C-c>", '"+y', { noremap = true, desc = "Copy to clipboard" })
+map("i", "<C-v>", "<C-r>+", { noremap = true, desc = "Paste clipboard" })
+map("n", "<C-v>", '"+p', { noremap = true, desc = "Paste clipboard" })

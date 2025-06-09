@@ -1,0 +1,239 @@
+-- Simple LSP auto-restart with buffer sync
+local group = vim.api.nvim_create_augroup("UniversalLSPRestart", { clear = true })
+
+-- Store LSP configs for auto-restart
+local lsp_configs = {}
+
+-- Capture LSP configs when they attach
+vim.api.nvim_create_autocmd("LspAttach", {
+	group = group,
+	callback = function(args)
+		local client = vim.lsp.get_client_by_id(args.data.client_id)
+		if client and client.config then
+			-- Store the entire configuration to ensure all settings are preserved
+			lsp_configs[client.name] = vim.deepcopy(client.config)
+
+			-- Ensure we have at least these critical fields
+			lsp_configs[client.name].name = client.name
+			if not lsp_configs[client.name].root_dir then
+				lsp_configs[client.name].root_dir = vim.fn.getcwd()
+			end
+		end
+	end,
+})
+
+-- Function to capture buffer state for LSP restarts
+local function capture_buffer_state(bufnr)
+	bufnr = bufnr or vim.api.nvim_get_current_buf()
+
+	-- Collect information about current state
+	local state = {
+		bufnr = bufnr,
+		filepath = vim.api.nvim_buf_get_name(bufnr),
+		current_win = vim.api.nvim_get_current_win(),
+		windows = {},
+		buffer_content = {},
+		mode = vim.api.nvim_get_mode().mode,
+		modified = vim.api.nvim_get_option_value("modified", { buf = bufnr }),
+	}
+
+	-- Capture cursor position for all windows viewing this buffer
+	for _, win in ipairs(vim.api.nvim_list_wins()) do
+		if vim.api.nvim_win_get_buf(win) == bufnr then
+			table.insert(state.windows, {
+				winid = win,
+				cursor = vim.api.nvim_win_get_cursor(win),
+				view = vim.fn.winsaveview(),
+			})
+		end
+	end
+
+	-- Save entire buffer content if needed
+	if state.filepath == "" or state.modified then
+		state.buffer_content = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+	end
+
+	-- Save the file if modified and has a path
+	if state.modified and state.filepath ~= "" then
+		pcall(vim.cmd, "silent! write! " .. vim.fn.fnameescape(state.filepath))
+	end
+
+	return state
+end
+
+-- Function to restore buffer state after LSP restart
+local function restore_buffer_state(state)
+	if not state or not vim.api.nvim_buf_is_valid(state.bufnr) then
+		return
+	end
+
+	local bufnr = state.bufnr
+
+	-- For buffers with a filepath, ensure content is up-to-date
+	if state.filepath ~= "" then
+		-- Use silent editing to avoid messing up the state
+		pcall(function()
+			vim.cmd("silent! e! " .. vim.fn.fnameescape(state.filepath))
+		end)
+	else
+		-- For buffers without a filepath, restore the content
+		vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, state.buffer_content)
+	end
+
+	-- Restore window positions and views
+	for _, win_state in ipairs(state.windows) do
+		if vim.api.nvim_win_is_valid(win_state.winid) then
+			vim.api.nvim_win_set_buf(win_state.winid, bufnr)
+			pcall(vim.api.nvim_win_set_cursor, win_state.winid, win_state.cursor)
+
+			-- Restore detailed window view (scroll position, etc.)
+			if win_state.view then
+				vim.fn.win_execute(win_state.winid, "call winrestview(" .. vim.fn.json_encode(win_state.view) .. ")")
+			end
+		end
+	end
+
+	-- Restore current window
+	if vim.api.nvim_win_is_valid(state.current_win) then
+		vim.api.nvim_set_current_win(state.current_win)
+	end
+
+	-- Restore mode
+	if state.mode:match("^i") then
+		vim.cmd("stopinsert")
+		vim.schedule(function()
+			vim.cmd("startinsert")
+		end)
+	elseif state.mode:match("^v") or state.mode:match("^V") then
+		vim.schedule(function()
+			vim.cmd("normal! gv")
+		end)
+	end
+
+	-- Mark the buffer as unmodified if we saved it
+	if state.filepath ~= "" and not state.modified then
+		vim.api.nvim_set_option_value("modified", false, { buf = bufnr })
+	end
+
+	-- Force refresh the buffer to ensure connection with LSP
+	vim.cmd("doautocmd BufEnter " .. bufnr)
+	vim.cmd("redraw!")
+end
+
+-- Auto-restart any LSP that detaches unexpectedly
+vim.api.nvim_create_autocmd("LspDetach", {
+	group = group,
+	callback = function(args)
+		local client = vim.lsp.get_client_by_id(args.data.client_id)
+		if not client then
+			return
+		end
+
+		local server_name = client.name
+		local bufnr = args.buf
+
+		-- Only proceed if buffer is still valid
+		if not vim.api.nvim_buf_is_valid(bufnr) then
+			return
+		end
+
+		-- Capture buffer state before potential restart
+		local buffer_state = capture_buffer_state(bufnr)
+
+		vim.defer_fn(function()
+			-- Check again if buffer is still valid
+			if not vim.api.nvim_buf_is_valid(bufnr) then
+				return
+			end
+
+			-- Check if another LSP of the same type has already attached
+			local active_clients = vim.lsp.get_clients({ bufnr = bufnr, name = server_name })
+			if #active_clients == 0 then
+				local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
+				if filetype and filetype ~= "" then
+					vim.notify(string.format("Auto-restarting %s", server_name), vim.log.levels.INFO)
+
+					local config = lsp_configs[server_name]
+					if config then
+						-- Restart with full original configuration
+						vim.lsp.start(config, { bufnr = bufnr })
+
+						-- Wait for LSP to initialize before restoring state
+						vim.defer_fn(function()
+							restore_buffer_state(buffer_state)
+						end, 1000)
+					end
+				end
+			end
+		end, 1000)
+	end,
+})
+
+-- Manual restart with sync
+local function restart_with_sync(server_name)
+	local buffer_state = capture_buffer_state()
+	local bufnr = buffer_state.bufnr
+
+	if server_name then
+		-- Restart specific server
+		vim.notify(string.format("Restarting %s with original settings...", server_name), vim.log.levels.INFO)
+		pcall(vim.cmd, "LspStop " .. server_name)
+
+		vim.defer_fn(function()
+			local config = lsp_configs[server_name]
+			if config then
+				-- Use the entire original config
+				vim.lsp.start(config, { bufnr = bufnr })
+			else
+				pcall(vim.cmd, "LspStart " .. server_name)
+			end
+		end, 500)
+	else
+		-- Restart all active servers for current buffer
+		local clients = vim.lsp.get_clients({ bufnr = bufnr })
+		if #clients == 0 then
+			vim.notify("No active LSP clients", vim.log.levels.WARN)
+			return
+		end
+
+		vim.notify("Restarting all LSP servers with original settings...", vim.log.levels.INFO)
+		local server_names = {}
+		for _, client in ipairs(clients) do
+			table.insert(server_names, client.name)
+			pcall(vim.cmd, "LspStop " .. client.name)
+		end
+
+		vim.defer_fn(function()
+			for _, name in ipairs(server_names) do
+				local config = lsp_configs[name]
+				if config then
+					-- Use the entire original config
+					vim.lsp.start(config, { bufnr = bufnr })
+				else
+					pcall(vim.cmd, "LspStart " .. name)
+				end
+			end
+		end, 500)
+	end
+
+	-- Wait for LSP servers to initialize before restoring state
+	vim.defer_fn(function()
+		restore_buffer_state(buffer_state)
+	end, 2000)
+end
+
+-- Simple restart command
+vim.api.nvim_create_user_command("LspRestartSync", function(opts)
+	restart_with_sync(opts.args ~= "" and opts.args or nil)
+end, {
+	nargs = "?",
+	complete = function()
+		local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
+		local names = {}
+		for _, client in ipairs(clients) do
+			table.insert(names, client.name)
+		end
+		return names
+	end,
+	desc = "Restart LSP servers with buffer sync",
+})
