@@ -20,4 +20,4 @@ vim.schedule(function()
 	require("mappings")
 end)
 -- set color scheme
-vim.cmd.colorscheme("catppuccin")
+vim.cmd.colorscheme("tokyodark")

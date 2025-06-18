@@ -7,6 +7,17 @@ return {
 		config = function()
 			vim.cmd.colorscheme("catppuccin")
 		end,
+		enabled = false,
+	},
+	{
+		"tiagovla/tokyodark.nvim",
+		opts = {
+			-- custom options here
+		},
+		config = function(_, opts)
+			require("tokyodark").setup(opts) -- calling setup is optional
+			vim.cmd([[colorscheme tokyodark]])
+		end,
 	},
 	{
 		"nvim-tree/nvim-web-devicons",

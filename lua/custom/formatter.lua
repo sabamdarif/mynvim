@@ -8,5 +8,5 @@ return {
 	bash = { "shfmt" },
 	json = { "prettierd" },
 	yaml = { "yamlfmt" },
-	xml = { "xmlformatter" },
+	-- xml = { "xmlformatter" },
 }

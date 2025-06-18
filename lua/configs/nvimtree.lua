@@ -1,7 +1,6 @@
 return {
 	filters = {
 		dotfiles = false,
-		custom = { ".git" },
 	},
 	disable_netrw = true,
 	hijack_cursor = true,
