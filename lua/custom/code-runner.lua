@@ -8,7 +8,7 @@ M.setup = function()
 				"javac $fileName &&",
 				"java $fileNameWithoutExt",
 			},
-			python = "python3 -u",
+			python = "python $fileName",
 			typescript = "deno run",
 			rust = {
 				"cd $dir &&",

@@ -309,4 +309,10 @@ return {
 			"nvim-telescope/telescope.nvim",
 		},
 	},
+	{
+		"akinsho/toggleterm.nvim",
+		version = "*",
+		event = "VeryLazy",
+		opts = require("configs.toggleterm"),
+	},
 }
