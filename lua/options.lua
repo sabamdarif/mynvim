@@ -11,11 +11,12 @@ o.cursorline = true
 o.cursorlineopt = "both"
 
 -- Indenting
+o.shiftwidth = 4 -- Indent width
+o.tabstop = 4 -- Tab width
+o.softtabstop = 4 -- Soft tab stop
 o.expandtab = true
-o.shiftwidth = 4
 o.smartindent = true
-o.tabstop = 4
-o.softtabstop = 4
+o.autoindent = true
 
 opt.fillchars = { eob = " " }
 o.ignorecase = true
@@ -43,7 +44,8 @@ o.updatetime = 500
 -- go to previous/next line with h,l,left arrow and right arrow
 -- when cursor reaches end/beginning of line
 opt.whichwrap:append("<>[]hl")
-
+opt.autoread = true -- Auto reload files changed outside vim
+opt.showmatch = true -- Highlight matching brackets
 -- disable some default providers
 g.loaded_node_provider = 0
 g.loaded_python3_provider = 0

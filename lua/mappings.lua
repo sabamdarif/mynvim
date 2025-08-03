@@ -121,6 +121,8 @@ map("n", "<leader>x", "<cmd>Bdelete!<CR>", { desc = "Close buffer", noremap = tr
 -- ============  Splits =============
 map("n", "<leader>sv", "<cmd>vsp<cr>", { noremap = true, silent = true, desc = "Vertical split" })
 map("n", "<leader>sh", "<cmd>sp<cr>", { noremap = true, silent = true, desc = "Horizontal split" })
+map("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Decrease window width" })
+map("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Increase window width" })
 
 -- ============  Git Integration =============
 map("n", "dv", ":DiffviewOpen<CR>", { desc = "Open Git diff view" })
@@ -172,6 +174,9 @@ map({ "n", "v" }, "<C-/>", "gcc", { desc = "Toggle comment", remap = true })
 map({ "n", "v" }, "<Del>", '"_dw', { noremap = true, silent = true, desc = "Delete word (no yank)" })
 
 -- ============  VS Code-Like Keybindings =============
+
+map("v", "<", "<gv", { desc = "Indent left and reselect" })
+map("v", ">", ">gv", { desc = "Indent right and reselect" })
 
 -- Undo / Redo
 map("i", "<C-z>", "<Esc>ua", { noremap = true, desc = "Undo in insert mode" })

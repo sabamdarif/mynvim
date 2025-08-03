@@ -4,14 +4,14 @@ function M.setup()
 		return vim.api.nvim_create_augroup("user_" .. name, { clear = true })
 	end
 	-- Reload file if changed outside Vim
-	vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
-		group = augroup("checktime"),
-		callback = function()
-			if vim.o.buftype ~= "nofile" then
-				vim.cmd.checktime()
-			end
-		end,
-	})
+	-- vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
+	-- 	group = augroup("checktime"),
+	-- 	callback = function()
+	-- 		if vim.o.buftype ~= "nofile" then
+	-- 			vim.cmd.checktime()
+	-- 		end
+	-- 	end,
+	-- })
 	-- Highlight on yank
 	vim.api.nvim_create_autocmd("TextYankPost", {
 		group = augroup("highlight_yank"),
