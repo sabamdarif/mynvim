@@ -135,6 +135,31 @@ vim.lsp.config("yamlls", {
 })
 
 -- ===================================================================
+-- override bashls with extra settings
+-- ===================================================================
+-- Configure bashls to also handle zsh files
+vim.lsp.config("bashls", {
+	on_attach = M.on_attach,
+	on_init = M.on_init,
+	capabilities = M.capabilities,
+	filetypes = { "sh", "bash", "zsh" },
+	settings = {
+		bashIde = {
+			-- Enable glob pattern support for better zsh completion
+			globPattern = "**/*@(.sh|.inc|.bash|.command|.zsh|.zshrc)",
+		},
+	},
+})
+
+-- Ensure zsh files are properly detected
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+	pattern = { "*.zsh", ".zshrc", ".zshenv", ".zprofile", ".zlogin", ".zlogout" },
+	callback = function()
+		vim.bo.filetype = "zsh"
+	end,
+})
+
+-- ===================================================================
 -- diagnostic, signs, icons
 -- ===================================================================
 local x = vim.diagnostic.severity
