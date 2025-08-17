@@ -236,11 +236,6 @@ return {
 		},
 	},
 	{
-		"folke/which-key.nvim",
-		event = "VeryLazy",
-		enabled = false,
-	},
-	{
 		"CRAG666/code_runner.nvim",
 		cmd = {
 			"RunCode",
@@ -291,9 +286,6 @@ return {
 			return require("configs.render-markdown")
 		end,
 	},
-	------------------------------------------------------
-	---------        External plugins    -----------------
-	------------------------------------------------------
 	{
 		"folke/todo-comments.nvim",
 		cmd = { "TodoTrouble", "TodoTelescope" },

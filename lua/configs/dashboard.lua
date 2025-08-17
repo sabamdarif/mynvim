@@ -24,6 +24,7 @@ M.setup = function()
 		dashboard.button("th", "󱥚  Themes", "<cmd>ColorschemeWithPreview<cr>"),
 		dashboard.button("s", "󰁯  Restore session", "<cmd>lua require('persistence').load()<cr>"),
 		dashboard.button("l", "󰒲  Lazy", "<cmd> Lazy <cr>"),
+		dashboard.button("k", "  List Keymaps", "<cmd>Telescope keymaps<cr>"),
 		dashboard.button("q", "  Quit", "<cmd> qa <cr>"),
 	}
 

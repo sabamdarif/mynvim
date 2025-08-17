@@ -73,12 +73,6 @@ end, { desc = "Format file" })
 -- ============  Terminal Mode =============
 map("t", "<C-x>", "<C-\\><C-N>", { desc = "Exit terminal mode" })
 
--- ============  WhichKey =============
-map("n", "<leader>wK", "<cmd>WhichKey<CR>", { desc = "Show all keymaps" })
-map("n", "<leader>wk", function()
-	vim.cmd("WhichKey " .. vim.fn.input("WhichKey: "))
-end, { desc = "WhichKey query" })
-
 -- ============ 󰍽 Mouse Scrolling =============
 for _, mode in ipairs({ "n", "v" }) do
 	map(mode, "<ScrollWheelUp>", "<C-y>", { silent = true })
@@ -148,7 +142,18 @@ end, { noremap = true, desc = "Toggle Live Preview" })
 
 -- ============ 󰒆 Select All =============
 map("n", "<C-a>", "ggVG", { noremap = true, silent = true, desc = "Select all text" })
-
+-- map("n", "<C-a>", function()
+-- 	local pos = vim.fn.getpos(".") -- Save current cursor position
+-- 	vim.cmd("normal! ggVG") -- Go to top and select all
+-- 	-- After yanking with 'y', restore position
+-- 	vim.api.nvim_create_autocmd("TextYankPost", {
+-- 		callback = function()
+-- 			vim.fn.setpos(".", pos)
+-- 			return true -- Remove the autocmd after first use
+-- 		end,
+-- 		once = true,
+-- 	})
+-- end, { noremap = true, silent = true, desc = "Select all text and restore position after yank" })
 -- ============  Todo Comments =============
 map("n", "]t", function()
 	require("todo-comments").jump_next()
