@@ -151,6 +151,91 @@ vim.lsp.config("bashls", {
 	},
 })
 
+-- ===================================================================
+-- override pyright with virtual environment support
+-- ===================================================================
+
+-- Helper function to find Python virtual environment
+local function get_python_path()
+	local util = require("lspconfig.util")
+
+	-- Check for project-specific virtual environments
+	local cwd = vim.fn.getcwd()
+
+	-- Common virtual environment locations
+	local venv_patterns = {
+		util.path.join(cwd, "venv", "bin", "python"), -- ./venv/bin/python
+		util.path.join(cwd, ".venv", "bin", "python"), -- ./.venv/bin/python
+		util.path.join(cwd, "env", "bin", "python"), -- ./env/bin/python
+		util.path.join(vim.env.HOME, "virtualenvs", "nvim-venv", "bin", "python"), -- Global nvim venv
+		util.path.join(vim.env.HOME, ".virtualenvs", vim.fn.fnamemodify(cwd, ":t"), "bin", "python"), -- virtualenvwrapper style
+	}
+
+	-- Check if VIRTUAL_ENV is set
+	if vim.env.VIRTUAL_ENV then
+		table.insert(venv_patterns, 1, util.path.join(vim.env.VIRTUAL_ENV, "bin", "python"))
+	end
+
+	-- Return the first existing Python path
+	for _, python_path in ipairs(venv_patterns) do
+		if vim.fn.executable(python_path) == 1 then
+			return python_path
+		end
+	end
+
+	-- Fallback to system python
+	return vim.fn.exepath("python3") or vim.fn.exepath("python") or "python"
+end
+
+-- Configure pyright with virtual environment support
+vim.lsp.config("pyright", {
+	on_attach = M.on_attach,
+	on_init = M.on_init,
+	capabilities = M.capabilities,
+	before_init = function(_, config)
+		local python_path = get_python_path()
+		config.settings.python.pythonPath = python_path
+		vim.notify("Using Python: " .. python_path, vim.log.levels.INFO)
+	end,
+	settings = {
+		python = {
+			analysis = {
+				autoSearchPaths = true,
+				useLibraryCodeForTypes = true,
+				diagnosticMode = "workspace",
+			},
+		},
+	},
+})
+
+-- Alternative: If you're using pylsp instead of pyright
+-- vim.lsp.config("pylsp", {
+-- 	on_attach = M.on_attach,
+-- 	on_init = M.on_init,
+-- 	capabilities = M.capabilities,
+-- 	before_init = function(_, config)
+-- 		local python_path = get_python_path()
+-- 		config.settings.pylsp.plugins.jedi.environment = vim.fn.fnamemodify(python_path, ":h:h")
+-- 		vim.notify("Using Python environment: " .. vim.fn.fnamemodify(python_path, ":h:h"), vim.log.levels.INFO)
+-- 	end,
+-- 	settings = {
+-- 		pylsp = {
+-- 			plugins = {
+-- 				pycodestyle = { enabled = false },
+-- 				mccabe = { enabled = false },
+-- 				pyflakes = { enabled = false },
+-- 				flake8 = { enabled = true },
+-- 				pylint = { enabled = true },
+-- 				jedi_completion = { enabled = true },
+-- 				jedi_hover = { enabled = true },
+-- 				jedi_references = { enabled = true },
+-- 				jedi_signature_help = { enabled = true },
+-- 				jedi_symbols = { enabled = true },
+-- 			},
+-- 		},
+-- 	},
+-- })
+
 -- Ensure zsh files are properly detected
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 	pattern = { "*.zsh", ".zshrc", ".zshenv", ".zprofile", ".zlogin", ".zlogout", ".shell_functions", ".shell_aliases" },
@@ -165,8 +250,8 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 local x = vim.diagnostic.severity
 
 vim.diagnostic.config({
-	virtual_text = { prefix = "" },
-	signs = { text = { [x.ERROR] = "󰅙", [x.WARN] = "", [x.INFO] = "󰋼", [x.HINT] = "󰌵" } },
+	virtual_text = { prefix = "" },
+	signs = { text = { [x.ERROR] = "󰅙", [x.WARN] = "", [x.INFO] = "󰋼", [x.HINT] = "󰌵" } },
 	underline = true,
 	float = { border = "single" },
 })
