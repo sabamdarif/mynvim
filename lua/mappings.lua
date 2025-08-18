@@ -200,3 +200,4 @@ map("v", "<C-x>", '"+d', { noremap = true, desc = "Cut to clipboard" })
 map("v", "<C-c>", '"+y', { noremap = true, desc = "Copy to clipboard" })
 map("i", "<C-v>", "<C-r>+", { noremap = true, desc = "Paste clipboard" })
 map("n", "<C-v>", '"+p', { noremap = true, desc = "Paste clipboard" })
+-- vaf vif vai
