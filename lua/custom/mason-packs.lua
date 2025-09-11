@@ -12,7 +12,6 @@ return {
 		"shfmt",
 		"stylua",
 		"yaml-language-server",
-		"yamlfmt",
 		"prettier",
 		"harper-ls",
 		"shellcheck",

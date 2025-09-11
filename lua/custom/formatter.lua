@@ -7,6 +7,6 @@ return {
 	sh = { "shfmt" },
 	bash = { "shfmt" },
 	json = { "prettierd" },
-	yaml = { "yamlfmt" },
+	yaml = { "prettierd" },
 	-- xml = { "xmlformatter" },
 }

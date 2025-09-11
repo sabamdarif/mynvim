@@ -34,7 +34,7 @@ map({ "n", "v" }, "<leader>sr", function()
 end, { desc = "Search and Replace (grug-far)" })
 
 -- ============  Line Number Toggle =============
-map("n", "<leader>r", "<cmd>set rnu!<CR>", { desc = "Toggle relative number" })
+-- map("n", "<leader>r", "<cmd>set rnu!<CR>", { desc = "Toggle relative number" })
 
 -- ============  File Explorer =============
 map({ "n", "v", "i" }, "<C-n>", "<cmd>NvimTreeToggle<CR>", { remap = true, desc = "Toggle NvimTree" })

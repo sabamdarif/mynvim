@@ -151,6 +151,24 @@ vim.lsp.config("bashls", {
 	},
 })
 
+-- Ensure zsh files are properly detected
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+	pattern = {
+		"*.zsh",
+		".zshrc",
+		".zshenv",
+		".zprofile",
+		".zlogin",
+		".zlogout",
+		".shell_functions",
+		".shell_aliases",
+		".aliases",
+	},
+	callback = function()
+		vim.bo.filetype = "zsh"
+	end,
+})
+
 -- ===================================================================
 -- override pyright with virtual environment support
 -- ===================================================================
@@ -235,14 +253,6 @@ vim.lsp.config("pyright", {
 -- 		},
 -- 	},
 -- })
-
--- Ensure zsh files are properly detected
-vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-	pattern = { "*.zsh", ".zshrc", ".zshenv", ".zprofile", ".zlogin", ".zlogout", ".shell_functions", ".shell_aliases" },
-	callback = function()
-		vim.bo.filetype = "zsh"
-	end,
-})
 
 -- ===================================================================
 -- diagnostic, signs, icons
