@@ -37,7 +37,7 @@ end, { desc = "Search and Replace (grug-far)" })
 -- map("n", "<leader>r", "<cmd>set rnu!<CR>", { desc = "Toggle relative number" })
 
 -- ============  File Explorer =============
--- map({ "n", "v", "i" }, "<C-n>", "<cmd>NvimTreeToggle<CR>", { remap = true, desc = "Toggle NvimTree" })
+map({ "n", "v", "i" }, "<C-n>", "<cmd>NvimTreeToggle<CR>", { remap = true, desc = "Toggle NvimTree" })
 
 -- ============  Telescope Mappings =============
 map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Find files" })

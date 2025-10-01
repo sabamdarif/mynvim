@@ -10,9 +10,6 @@ return {
         -- Load language configs
         local lang_config = require("lang")
 
-        -- Debug: Print parsers to verify
-        print("Treesitter parsers to install:", vim.inspect(lang_config.treesitter_parsers))
-
         require("nvim-treesitter.configs").setup({
             -- Automatically install missing parsers when entering buffer
             auto_install = true,
