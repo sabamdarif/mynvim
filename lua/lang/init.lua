@@ -1,26 +1,13 @@
--- ╔══════════════════════════════════════════════════════════════════════════════╗
--- ║                         LANGUAGE CONFIGURATION                               ║
--- ║                                                                              ║
--- ║  Add or remove languages here to customize your development setup.           ║
--- ║  Each language folder contains:                                              ║
--- ║    - <lang>.lua: LSP servers, formatters, treesitter parsers                 ║
--- ║    - plugins.lua: Language-specific plugins (optional)                       ║
--- ╚══════════════════════════════════════════════════════════════════════════════╝
-
-local languages = {
-    "bash",
-    "python",
-    "javascript",
-    "html",
-    "css",
-    "markdown",
-    "lua",
-    -- "c",
-}
-
 -- ════════════════════════════════════════════════════════════════════════════════
---                     Internal Configuration (Don't modify)
+--                     Language Configuration Loader
 -- ════════════════════════════════════════════════════════════════════════════════
+-- This file automatically loads all language configurations defined in languages.lua
+-- Do not modify this file unless you know what you're doing.
+-- To add/remove languages, edit lua/languages.lua instead.
+-- ════════════════════════════════════════════════════════════════════════════════
+
+-- Load the list of enabled languages from languages.lua
+local languages = require("languages")
 
 -- Central language configuration aggregator
 local M = {
