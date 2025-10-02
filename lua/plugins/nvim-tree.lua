@@ -4,7 +4,12 @@ return {
     cmd = { "NvimTreeToggle", "NvimTreeFocus" },
     opts = {
         filters = {
-            dotfiles = false,
+            git_ignored = false,
+            custom = { "^.git$", ".DS_Store", "thumbs.db" },
+        },
+        live_filter = {
+            prefix = "[FILTER]: ",
+            always_show_folders = false,
         },
         disable_netrw = true,
         hijack_cursor = true,
@@ -17,8 +22,14 @@ return {
             width = 35,
             preserve_window_proportions = true,
         },
+        git = {
+            enable = true,
+            ignore = false,
+        },
         renderer = {
-            highlight_git = true,
+            add_trailing = true,
+            highlight_git = "all",
+            highlight_opened_files = "icon",
             indent_markers = { enable = true },
             icons = {
                 glyphs = {
@@ -46,4 +57,16 @@ return {
             },
         },
     },
+    -- config = function(_, opts)
+    --     require("nvim-tree").setup(opts)
+    --
+    --     -- Statusline tweak for tree window
+    --     local nt_api = require("nvim-tree.api")
+    --     nt_api.events.subscribe(nt_api.events.Event.TreeOpen, function()
+    --         local tree_winid = nt_api.tree.winid()
+    --         if tree_winid ~= nil then
+    --             vim.api.nvim_set_option_value("statusline", "%t", { win = tree_winid })
+    --         end
+    --     end)
+    -- end,
 }
