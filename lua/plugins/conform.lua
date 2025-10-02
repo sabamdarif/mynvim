@@ -1,5 +1,6 @@
 return {
     "stevearc/conform.nvim",
+    event = { "BufWritePre" },
     config = function()
         local lang_config = require("lang")
 

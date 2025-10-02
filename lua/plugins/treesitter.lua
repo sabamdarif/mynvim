@@ -1,10 +1,10 @@
 return {
     "nvim-treesitter/nvim-treesitter",
-    branch = "master",
     lazy = false,
     build = ":TSUpdate",
     dependencies = {
         "nvim-treesitter/nvim-treesitter-textobjects",
+        event = { "BufReadPost", "BufNewFile" },
     },
     config = function()
         -- Load language configs

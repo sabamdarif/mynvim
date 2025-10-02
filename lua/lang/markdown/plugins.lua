@@ -106,4 +106,11 @@ return {
             },
         },
     },
+    {
+        "brianhuster/live-preview.nvim",
+        event = "VeryLazy",
+        dependencies = {
+            "nvim-telescope/telescope.nvim",
+        },
+    },
 }

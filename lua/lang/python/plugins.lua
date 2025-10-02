@@ -3,8 +3,7 @@ return {
         "linux-cultist/venv-selector.nvim",
         ft = { "python" },
         keys = {
-            { "<leader>vs", "<cmd>VenvSelect<cr>",       desc = "Select Python Virtual Environment" },
-            { "<leader>vc", "<cmd>VenvSelectCached<cr>", desc = "Select Cached Venv" },
+            { "<leader>ve", "<cmd>VenvSelect<cr>", desc = "Select Python Virtual Environment" },
         },
         opts = {
             name = { "venv", ".venv", "env", ".env" },

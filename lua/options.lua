@@ -9,6 +9,12 @@ o.laststatus = 3 -- Show a single global status line (instead of one per window)
 o.showmode = false -- Don’t show the mode (like -- INSERT --) because your statusline shows it
 -- Example: No "-- INSERT --" at the bottom.
 
+o.exrc = true -- Allow Neovim to read project-local config files
+-- Example: It will allow to use project's local .nvim.lua file
+
+o.secure = true -- For safety: disables risky commands in local files
+-- Example: Ask you if you want to trust project's .nvim.lua file
+
 opt.termguicolors = true -- Enable true color support
 -- Example: Your colorschemes will look better with full RGB colors.
 
@@ -174,10 +180,3 @@ opt.spelllang = { "en" } -- Set spell check language
 -- Shortmess: combine multiple flags
 opt.shortmess:append({ s = true, I = true, W = true, c = true, C = true })
 -- Example: Disable intro message, info, and completion messages.
-
--- Disable some builtin providers
-g.loaded_node_provider = 0
-g.loaded_python3_provider = 0
-g.loaded_perl_provider = 0
-g.loaded_ruby_provider = 0
--- Example: Speeds up startup if you don't use Node/Python/Perl/Ruby integrations.

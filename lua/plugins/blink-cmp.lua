@@ -2,7 +2,8 @@
 return {
     {
         "L3MON4D3/LuaSnip",
-        dependencies = { "rafamadriz/friendly-snippets" },
+        event = "InsertEnter",
+        dependencies = { "rafamadriz/friendly-snippets", event = "InsertEnter", },
         run = "make install_jsregexp",
         opts = {
             history = true,
@@ -25,11 +26,9 @@ return {
     },
     {
         "saghen/blink.cmp",
-        version = "1.*",
         event = "InsertEnter",
         dependencies = {
             "L3MON4D3/LuaSnip",
-            "onsails/lspkind.nvim",
             "nvim-tree/nvim-web-devicons",
             {
                 "mikavilpas/blink-ripgrep.nvim",

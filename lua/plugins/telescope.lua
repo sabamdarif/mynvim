@@ -37,7 +37,9 @@ return {
                 },
             },
             extensions_list = { "themes", "terms" },
-            extensions = {},
+            extensions = {
+                fzf = {},
+            },
         }
     end,
 }
