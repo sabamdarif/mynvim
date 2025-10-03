@@ -1,5 +1,5 @@
 return {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     build = ":MasonInstallAll",
     cmd = { "Mason", "MasonInstall", "MasonUpdate", "MasonInstallAll" },
     config = function()

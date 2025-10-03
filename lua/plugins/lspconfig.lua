@@ -2,7 +2,7 @@ return {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-        "williamboman/mason.nvim",
+        "mason-org/mason.nvim",
         "saghen/blink.cmp",
     },
     config = function()
@@ -48,7 +48,7 @@ return {
                     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
                 end, opts("List workspace folders"))
                 vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, opts("Go to type definition"))
-                vim.keymap.set("n", "<leader>ra", vim.lsp.buf.rename, opts("Rename"))
+                vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts("Rename"))
                 vim.keymap.set("n", "K", vim.lsp.buf.hover, opts("Hover"))
                 vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts("Code action"))
             end,
