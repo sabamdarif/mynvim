@@ -175,6 +175,16 @@ function M.setup()
             vim.api.nvim_set_hl(0, "IndentBlanklineChar", { fg = "#3b4261", nocombine = true })
         end,
     })
+
+    -- wrap and check for spell in text filetypes
+    vim.api.nvim_create_autocmd("FileType", {
+        group = augroup("wrap_spell"),
+        pattern = { "text", "plaintex", "typst", "gitcommit", "markdown" },
+        callback = function()
+            vim.opt_local.wrap = true
+            vim.opt_local.spell = true
+        end,
+    })
 end
 
 return M
