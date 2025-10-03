@@ -12,6 +12,7 @@
 
 return {
     "bash",
+    "git",
     "python",
     "javascript",
     "html",
