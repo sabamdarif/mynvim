@@ -1,16 +1,11 @@
 return {
     "nvim-treesitter/nvim-treesitter",
-    lazy = false,
+    -- branch = "master",
     build = ":TSUpdate",
-    dependencies = {
-        "nvim-treesitter/nvim-treesitter-textobjects",
-        event = { "BufReadPost", "BufNewFile" },
-    },
-    config = function()
-        -- Load language configs
+    event = { "BufReadPost", "BufNewFile" },
+    opts = function()
         local lang_config = require("lang")
-
-        require("nvim-treesitter.configs").setup({
+        return {
             -- Automatically install missing parsers when entering buffer
             auto_install = true,
             -- Install parsers from language configs
@@ -28,30 +23,9 @@ return {
                     node_decremental = "<bs>",
                 },
             },
-            textobjects = {
-                select = {
-                    enable = true,
-                    lookahead = true,
-                    keymaps = {
-                        ["af"] = "@function.outer",
-                        ["if"] = "@function.inner",
-                        ["ac"] = "@class.outer",
-                        ["ic"] = "@class.inner",
-                    },
-                },
-                move = {
-                    enable = true,
-                    set_jumps = true,
-                    goto_next_start = {
-                        ["]m"] = "@function.outer",
-                        ["]]"] = "@class.outer",
-                    },
-                    goto_previous_start = {
-                        ["[m"] = "@function.outer",
-                        ["[["] = "@class.outer",
-                    },
-                },
-            },
-        })
+        }
+    end,
+    config = function(_, opts)
+        require("nvim-treesitter.configs").setup(opts)
     end,
 }
