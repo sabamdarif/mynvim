@@ -78,6 +78,6 @@ return {
             lualine_z = {},
         },
         tabline = {},
-        extensions = { "neo-tree", "lazy", "mason", "fzf" },
+        extensions = { "quickfix", "neo-tree", "lazy", "mason", "toggleterm", },
     },
 }

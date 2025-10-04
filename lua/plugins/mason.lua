@@ -15,10 +15,5 @@ return {
         })
 
         require("utils.mason-install-all")
-
-        -- Optional: Auto-install on startup
-        -- vim.defer_fn(function()
-        -- 	vim.cmd("MasonInstallAll")
-        -- end, 100)
     end,
 }

@@ -15,6 +15,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- Set leaders before loading plugins
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
@@ -28,7 +29,7 @@ end
 -- Setup lazy.nvim with all plugins
 local specs = {
     { import = "plugins" },
-    { import = "colorscheme" },
+    require("colorschemes"),
 }
 
 -- Add language-specific plugins if any
@@ -40,6 +41,5 @@ require("lazy").setup({
     spec = specs,
 })
 
-require("options")
-require("mapping")
-require("autocmds").setup()
+-- Load core configuration (options, keymaps, autocmds)
+require("base")
