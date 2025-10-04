@@ -1,13 +1,14 @@
 -- ════════════════════════════════════════════════════════════════════════════════
 --                     Language Configuration Loader
 -- ════════════════════════════════════════════════════════════════════════════════
--- This file automatically loads all language configurations defined in languages.lua
+-- This file automatically loads all language configurations defined in settings.lua
 -- Do not modify this file unless you know what you're doing.
--- To add/remove languages, edit lua/languages.lua instead.
+-- To add/remove languages, edit lua/settings.lua instead.
 -- ════════════════════════════════════════════════════════════════════════════════
 
--- Load the list of enabled languages from languages.lua
-local languages = require("languages")
+-- Load the list of enabled languages from settings.lua
+local settings = require("settings")
+local languages = settings.languages
 
 -- Central language configuration aggregator
 local M = {

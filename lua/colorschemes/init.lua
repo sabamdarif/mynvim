@@ -1,5 +1,6 @@
--- Load the active colorscheme name
-local active_colorscheme = require("colorscheme")
+-- Load the active colorscheme name from settings
+local settings = require("settings")
+local active_colorscheme = settings.colorscheme
 
 -- Load the colorscheme configuration
 local colorscheme_config = require("colorschemes." .. active_colorscheme)
