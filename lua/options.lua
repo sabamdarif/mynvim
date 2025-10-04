@@ -51,10 +51,9 @@ opt.scrolloff = 4 -- Keep 4 lines visible above/below cursor when scrolling
 opt.sidescrolloff = 8 -- Keep 8 columns visible left/right of cursor
 -- Example: Horizontal scroll shows context around cursor.
 
-opt.linebreak = true -- Wrap long lines at word boundaries
--- Example: A long sentence breaks at spaces instead of mid-word.
 
 opt.list = true -- Show invisible characters like tabs/spaces
+
 opt.listchars = { -- Customize symbols for invisible characters
     tab = ". ", -- Tabs shown as ▸
     trail = "_", -- Trailing spaces shown as ·
@@ -62,8 +61,8 @@ opt.listchars = { -- Customize symbols for invisible characters
 }
 -- Example: Tabs and spaces become visible, useful for coding alignment.
 
-opt.wrap = false -- Disable line wrap
--- Example: Lines will scroll horizontally instead of wrapping.
+opt.wrap = true -- Enable line wrap
+-- Example: Text that exceeds the screen width will continue on the next line.
 
 opt.winminwidth = 5 -- Minimum width for a window
 -- Example: Prevents splits from becoming too small.
