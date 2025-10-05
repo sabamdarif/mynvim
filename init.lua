@@ -37,9 +37,11 @@ for _, spec in ipairs(lang_config.plugin_specs or {}) do
     table.insert(specs, spec)
 end
 
-require("lazy").setup({
-    spec = specs,
-})
+-- require("lazy").setup({
+--     spec = specs,
+-- })
+local lazy_config = require("base.lazy_config")
+require("lazy").setup(specs, lazy_config)
 
 -- Load core configuration (options, keymaps, autocmds)
 require("base")
