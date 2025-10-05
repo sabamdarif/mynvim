@@ -26,7 +26,6 @@ return {
     },
     {
         "saghen/blink.cmp",
-        version = '1.*',
         event = "InsertEnter",
         dependencies = {
             "L3MON4D3/LuaSnip",
@@ -37,6 +36,28 @@ return {
             },
         },
         opts = function()
+            local menu_cols = { { "label" }, { "kind_icon" }, { "kind" } }
+            local menu_components = {
+                kind_icon = {
+                    text = function(ctx)
+                        local icons = require "icons.lspkind"
+                        local icon = (icons[ctx.kind] or "󰈚")
+
+                        if ctx.source_name == "Path" then
+                            local dev_icon, _ = require("nvim-web-devicons").get_icon(ctx.label)
+                            if dev_icon then
+                                icon = dev_icon
+                            end
+                        end
+                        return icon
+                    end,
+                },
+                kind = {
+                    highlight = function(ctx)
+                        return ctx.kind
+                    end,
+                },
+            }
             return {
                 snippets = {
                     preset = "luasnip"
@@ -51,9 +72,6 @@ return {
                     ["<C-y>"] = { "select_and_accept" },
                 },
                 completion = {
-                    trigger = {
-                        show_on_insert_on_trigger_character = true,
-                    },
                     accept = {
                         auto_brackets = {
                             enabled = true,
@@ -68,10 +86,10 @@ return {
                         draw = {
                             treesitter = { "lsp" },
                             padding = { 1, 1 },
-                            columns = { { "label" }, { "kind_icon" }, { "kind" } },
-                            -- components = menu_components,
+                            columns = menu_cols,
+                            components = menu_components,
                         },
-                        border = "single",
+                        border = nil,
                     },
                     ghost_text = {
                         enabled = true,
@@ -120,9 +138,6 @@ return {
                 },
                 fuzzy = {
                     implementation = "prefer_rust",
-                    prebuilt_binaries = {
-                        force_version = "v1.7.0",
-                    },
                 },
             }
         end,
