@@ -7,24 +7,30 @@ return {
             symbol = "▏",
             draw = {
                 delay = 700,
-                animation = function() return 0 end, -- Disable animation for instant scope display (return 0 means no animation)
+                animation = function() return 0 end,
             },
         },
         init = function()
+            local excluded_fts = {
+                "help", "lazy", "mason", "notify",
+                "alpha", "NvimTree", "toggleterm",
+            }
+
             vim.api.nvim_create_autocmd("FileType", {
-                pattern = {
-                    "help", "lazy", "mason", "notify",
-                    "alpha", "NvimTree", "toggleterm",
-                },
+                pattern = excluded_fts,
                 callback = function()
-                    vim.b.miniindentscope_disable = true -- Disable mini.indentscope highlighting for this buffer
+                    vim.b.miniindentscope_disable = true
+                    vim.opt_local.list = false
                 end,
             })
-            -- Enable showing all indent lines
+
             vim.api.nvim_create_autocmd("FileType", {
+                pattern = "*",
                 callback = function()
-                    vim.opt_local.listchars:append({ leadmultispace = "▏   " })
-                    vim.opt_local.list = true -- Also disable listchars (indent lines) for this buffer
+                    if not vim.tbl_contains(excluded_fts, vim.bo.filetype) then
+                        vim.opt_local.listchars:append({ leadmultispace = "▏   " })
+                        vim.opt_local.list = true
+                    end
                 end,
             })
         end,
