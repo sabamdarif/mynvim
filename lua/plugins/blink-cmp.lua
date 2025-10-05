@@ -78,7 +78,7 @@ return {
                     },
                 },
                 sources = {
-                    default = { "lsp", "path", "snippets", "buffer", "ripgrep" },
+                    default = { "lsp", "snippets", "buffer", "ripgrep", "path" },
                     providers = {
                         lsp = {
                             score_offset = 10, -- Highest priority
