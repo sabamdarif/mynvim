@@ -80,16 +80,19 @@ return {
                     documentation = {
                         auto_show = true,
                         auto_show_delay_ms = 200,
+                        window = {
+                            border = "rounded",
+                        },
                     },
                     menu = {
                         scrollbar = false,
                         draw = {
-                            treesitter = { "lsp" },
+                            treesitter = { "lsp", "snippets", "buffer", "ripgrep", "path" },
                             padding = { 1, 1 },
                             columns = menu_cols,
                             components = menu_components,
                         },
-                        border = nil,
+                        border = "rounded",
                     },
                     ghost_text = {
                         enabled = true,
