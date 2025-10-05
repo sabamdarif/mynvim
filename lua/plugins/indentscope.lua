@@ -15,7 +15,6 @@ return {
                 "help", "lazy", "mason", "notify",
                 "alpha", "NvimTree", "toggleterm",
             }
-
             vim.api.nvim_create_autocmd("FileType", {
                 pattern = excluded_fts,
                 callback = function()
@@ -23,11 +22,11 @@ return {
                     vim.opt_local.list = false
                 end,
             })
-
             vim.api.nvim_create_autocmd("FileType", {
                 pattern = "*",
                 callback = function()
-                    if not vim.tbl_contains(excluded_fts, vim.bo.filetype) then
+                    -- Exclude nofile buffers (popups, notifications, etc.)
+                    if not vim.tbl_contains(excluded_fts, vim.bo.filetype) and vim.bo.buftype ~= "nofile" then
                         vim.opt_local.listchars:append({ leadmultispace = "▏   " })
                         vim.opt_local.list = true
                     end

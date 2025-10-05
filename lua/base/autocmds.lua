@@ -185,6 +185,17 @@ function M.setup()
             vim.opt_local.spell = true
         end,
     })
+
+    -- show all file type (for debug only)
+    -- vim.api.nvim_create_autocmd("BufWinEnter", {
+    --     callback = function(ev)
+    --         local ft = vim.bo[ev.buf].filetype
+    --         local bt = vim.bo[ev.buf].buftype
+    --         if ft ~= "" or bt ~= "" then
+    --             vim.notify(string.format("FT: '%s', BufType: '%s'", ft, bt))
+    --         end
+    --     end,
+    -- })
 end
 
 return M
