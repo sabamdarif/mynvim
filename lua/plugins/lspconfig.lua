@@ -70,6 +70,9 @@ return {
         return ret
     end,
     config = function(_, opts)
+        -- Add this line to apply your diagnostic settings
+        vim.diagnostic.config(opts.diagnostics)
+
         local lang_config = require("lang")
 
         -- Define on_init function to disable semanticTokensProvider
