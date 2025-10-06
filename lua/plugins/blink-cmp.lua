@@ -3,7 +3,7 @@ return {
     {
         "L3MON4D3/LuaSnip",
         event = "InsertEnter",
-        dependencies = { "rafamadriz/friendly-snippets", event = "InsertEnter", },
+        dependencies = { "rafamadriz/friendly-snippets", event = "InsertEnter" },
         run = "make install_jsregexp",
         opts = {
             history = true,
@@ -35,6 +35,7 @@ return {
                 version = "*",
             },
         },
+        version = '1.*',
         opts = function()
             local menu_cols = { { "label" }, { "kind_icon" }, { "kind" } }
             local menu_components = {
@@ -42,7 +43,6 @@ return {
                     text = function(ctx)
                         local icons = require "icons.lspkind"
                         local icon = (icons[ctx.kind] or "󰈚")
-
                         if ctx.source_name == "Path" then
                             local dev_icon, _ = require("nvim-web-devicons").get_icon(ctx.label)
                             if dev_icon then
@@ -58,9 +58,10 @@ return {
                     end,
                 },
             }
+
             return {
                 snippets = {
-                    preset = "luasnip"
+                    preset = "luasnip",
                 },
                 appearance = {
                     nerd_font_variant = "mono",
@@ -79,7 +80,7 @@ return {
                     },
                     documentation = {
                         auto_show = true,
-                        auto_show_delay_ms = 200,
+                        auto_show_delay_ms = 500,
                         window = {
                             border = "rounded",
                         },
@@ -101,29 +102,11 @@ return {
                 sources = {
                     default = { "lsp", "snippets", "buffer", "ripgrep", "path" },
                     providers = {
-                        lsp = {
-                            score_offset = 10, -- Highest priority
-                        },
-
-                        snippets = {
-                            score_offset = 5, -- Second priority (higher than default -1)
-                        },
-
-                        buffer = {
-                            score_offset = 0, -- Third priority (neutral score)
-                        },
-
-                        ripgrep = {
-                            module = "blink-ripgrep",
-                            score_offset = -3, -- Fourth priority
-                            fallbacks = {},
-                            ---@module "blink-ripgrep"
-                            opts = {},
-                        },
-
-                        path = {
-                            score_offset = -5, -- Lowest priority
-                        },
+                        lsp = { score_offset = 10 },
+                        snippets = { score_offset = 5 },
+                        buffer = { score_offset = 0 },
+                        ripgrep = { module = "blink-ripgrep", score_offset = -3, fallbacks = {}, opts = {} },
+                        path = { score_offset = -5 },
                     },
                 },
                 cmdline = {
@@ -140,7 +123,17 @@ return {
                     },
                 },
                 fuzzy = {
-                    implementation = "prefer_rust",
+                    implementation = "rust",
+                    prebuilt_binaries = {
+                        force_version = "v1.7.0",
+                    },
+                    sorts = {
+                        'exact',
+                        'score',
+                        'sort_text',
+                        "label",
+                        "kind",
+                    },
                 },
             }
         end,
