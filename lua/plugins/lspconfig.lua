@@ -5,65 +5,105 @@ return {
         "mason-org/mason.nvim",
         "saghen/blink.cmp",
     },
-    config = function()
-        local lang_config = require("lang")
-        require("mason").setup()
-        vim.lsp.inlay_hint.enable(false)
+    opts = function()
         local x = vim.diagnostic.severity
-        vim.diagnostic.config({
-            virtual_text = { prefix = "" },
-            signs = {
-                text = {
-                    [x.ERROR] = "󰅙",
-                    [x.WARN] = "",
-                    [x.INFO] = "󰋼",
-                    [x.HINT] = "󰌵",
+        -- Base capabilities
+        local capabilities = vim.lsp.protocol.make_client_capabilities()
+        -- Merge blink.cmp capabilities
+        capabilities = vim.tbl_deep_extend(
+            "force",
+            capabilities,
+            require("blink.cmp").get_lsp_capabilities({}, false)
+        )
+        -- Merge custom capabilities: folding range + workspace file operations
+        capabilities = vim.tbl_deep_extend("force", capabilities, {
+            textDocument = {
+                foldingRange = {
+                    dynamicRegistration = false,
+                    lineFoldingOnly = true,
                 },
             },
-            underline = true,
-            float = { border = "single" },
+            workspace = {
+                fileOperations = {
+                    didRename = true,
+                    willRename = true,
+                },
+            },
         })
-        local capabilities = vim.lsp.protocol.make_client_capabilities()
-        capabilities.textDocument.foldingRange = {
-            dynamicRegistration = false,
-            lineFoldingOnly = true,
+        ---@class PluginLspOpts
+        local ret = {
+            diagnostics = {
+                underline = true,
+                update_in_insert = false,
+                virtual_text = {
+                    spacing = 4,
+                    source = "if_many",
+                    prefix = "●",
+                },
+                severity_sort = true,
+                signs = {
+                    text = {
+                        [x.ERROR] = "󰅙",
+                        [x.WARN] = "",
+                        [x.INFO] = "󰋼",
+                        [x.HINT] = "󰌵",
+                    },
+                },
+            },
+            inlay_hints = {
+                enabled = true,
+                exclude = { "vue" },
+            },
+            codelens = { enabled = false },
+            folds = { enabled = true },
+            capabilities = capabilities,
+            format = {
+                formatting_options = nil,
+                timeout_ms = nil,
+            },
+            setup = {},
         }
-        capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
-        local on_init = function(client, _)
-            if client:supports_method("textDocument/semanticTokens") then
-                client.server_capabilities.semanticTokensProvider = nil
-            end
-        end
+        return ret
+    end,
+    config = function(_, opts)
+        local lang_config = require("lang")
+
+        -- Setup keymaps on LspAttach
         vim.api.nvim_create_autocmd("LspAttach", {
             callback = function(args)
                 local bufnr = args.buf
-                local function opts(desc)
+                local function map_opts(desc)
                     return { buffer = bufnr, desc = "LSP " .. desc }
                 end
-                vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts("Go to declaration"))
-                vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts("Go to definition"))
-                vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, opts("Add workspace folder"))
-                vim.keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, opts("Remove workspace folder"))
+                vim.keymap.set("n", "gD", vim.lsp.buf.declaration, map_opts("Go to declaration"))
+                vim.keymap.set("n", "gd", vim.lsp.buf.definition, map_opts("Go to definition"))
+                vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, map_opts("Add workspace folder"))
+                vim.keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder,
+                    map_opts("Remove workspace folder"))
                 vim.keymap.set("n", "<leader>wl", function()
                     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-                end, opts("List workspace folders"))
-                vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, opts("Go to type definition"))
-                vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts("Rename"))
-                vim.keymap.set("n", "K", vim.lsp.buf.hover, opts("Hover"))
-                vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts("Code action"))
+                end, map_opts("List workspace folders"))
+                vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, map_opts("Go to type definition"))
+                vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, map_opts("Rename"))
+                vim.keymap.set("n", "K", vim.lsp.buf.hover, map_opts("Hover"))
+                vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, map_opts("Code action"))
             end,
         })
+
+        -- Apply global capabilities
         vim.lsp.config("*", {
-            capabilities = capabilities,
-            on_init = on_init,
+            capabilities = opts.capabilities,
         })
+
+        -- Register configs for each LSP server
         for server, config in pairs(lang_config.lsp_config) do
             local server_config = vim.tbl_deep_extend("force", {
-                capabilities = capabilities,
-                on_init = on_init,
+                capabilities = opts.capabilities,
             }, config)
             vim.lsp.config(server, server_config)
         end
+
+        -- Enable LSP servers listed in lang_config
         if #lang_config.lsp_servers > 0 then
             vim.lsp.enable(lang_config.lsp_servers)
         end
