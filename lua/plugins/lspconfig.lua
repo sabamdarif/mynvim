@@ -7,14 +7,17 @@ return {
     },
     opts = function()
         local x = vim.diagnostic.severity
+
         -- Base capabilities
         local capabilities = vim.lsp.protocol.make_client_capabilities()
+
         -- Merge blink.cmp capabilities
         capabilities = vim.tbl_deep_extend(
             "force",
             capabilities,
             require("blink.cmp").get_lsp_capabilities({}, false)
         )
+
         -- Merge custom capabilities: folding range + workspace file operations
         capabilities = vim.tbl_deep_extend("force", capabilities, {
             textDocument = {
@@ -30,6 +33,7 @@ return {
                 },
             },
         })
+
         ---@class PluginLspOpts
         local ret = {
             diagnostics = {
@@ -68,6 +72,13 @@ return {
     config = function(_, opts)
         local lang_config = require("lang")
 
+        -- Define on_init function to disable semanticTokensProvider
+        local on_init = function(client, _)
+            if client:supports_method("textDocument/semanticTokens") then
+                client.server_capabilities.semanticTokensProvider = nil
+            end
+        end
+
         -- Setup keymaps on LspAttach
         vim.api.nvim_create_autocmd("LspAttach", {
             callback = function(args)
@@ -90,15 +101,17 @@ return {
             end,
         })
 
-        -- Apply global capabilities
+        -- Apply global capabilities and on_init
         vim.lsp.config("*", {
             capabilities = opts.capabilities,
+            on_init = on_init,
         })
 
-        -- Register configs for each LSP server
+        -- Register configs for each LSP server with capabilities and on_init
         for server, config in pairs(lang_config.lsp_config) do
             local server_config = vim.tbl_deep_extend("force", {
                 capabilities = opts.capabilities,
+                on_init = on_init,
             }, config)
             vim.lsp.config(server, server_config)
         end
