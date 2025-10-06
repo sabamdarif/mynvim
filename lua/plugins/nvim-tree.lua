@@ -5,7 +5,7 @@ return {
     opts = {
         filters = {
             git_ignored = false,
-            custom = { "^.git$", ".DS_Store", "thumbs.db" },
+            custom = { "^.git$", ".DS_Store", "thumbs.db", "^.hidden$" },
         },
         live_filter = {
             prefix = "[FILTER]: ",
