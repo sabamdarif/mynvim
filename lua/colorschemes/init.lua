@@ -9,13 +9,12 @@ local colorscheme_config = require("colorschemes." .. active_colorscheme)
 colorscheme_config.lazy = false
 colorscheme_config.priority = 1000
 
--- Wrap the original config function
 local original_config = colorscheme_config.config
 colorscheme_config.config = function()
     if original_config then
         original_config()
     end
-    vim.cmd([[colorscheme ]] .. active_colorscheme)
+    -- Colorscheme will be applied by init.lua after plugins load
 end
 
 return colorscheme_config

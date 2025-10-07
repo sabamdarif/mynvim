@@ -1,3 +1,7 @@
+-- Set leaders before loading plugins
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
+
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -14,10 +18,6 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
     end
 end
 vim.opt.rtp:prepend(lazypath)
-
--- Set leaders before loading plugins
-vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
 
 -- Load language configurations first
 local status_ok, lang_config = pcall(require, "lang")
@@ -37,11 +37,14 @@ for _, spec in ipairs(lang_config.plugin_specs or {}) do
     table.insert(specs, spec)
 end
 
--- require("lazy").setup({
---     spec = specs,
--- })
 local lazy_config = require("base.lazy_config")
 require("lazy").setup(specs, lazy_config)
 
 -- Load core configuration (options, keymaps, autocmds)
 require("base")
+
+-- CRITICAL: Apply colorscheme AFTER all plugins load
+vim.schedule(function()
+    local settings = require("settings")
+    vim.cmd.colorscheme(settings.colorscheme)
+end)
