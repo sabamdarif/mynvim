@@ -31,7 +31,53 @@ for _, spec in ipairs(lang_config.plugin_specs or {}) do
     table.insert(specs, spec)
 end
 
-require("lazy").setup(specs)
+-- Lazy.nvim options
+local opts = {
+    defaults = { lazy = true },
+    ui = {
+        icons = {
+            ft = "",
+            lazy = "󰂠 ",
+            loaded = "",
+            not_loaded = "",
+        },
+    },
+    performance = {
+        rtp = {
+            disabled_plugins = {
+                "2html_plugin",
+                "tohtml",
+                "getscript",
+                "getscriptPlugin",
+                "gzip",
+                "logipat",
+                "netrw",
+                "netrwPlugin",
+                "netrwSettings",
+                "netrwFileHandlers",
+                "matchit",
+                "tar",
+                "tarPlugin",
+                "rrhelper",
+                "spellfile_plugin",
+                "vimball",
+                "vimballPlugin",
+                "zip",
+                "zipPlugin",
+                "tutor",
+                "rplugin",
+                "syntax",
+                "synmenu",
+                "optwin",
+                "compiler",
+                "bugreport",
+                "ftplugin",
+            },
+        },
+    },
+}
+
+require("lazy").setup(specs, opts)
 
 -- CRITICAL: Apply colorscheme AFTER all plugins load
 vim.schedule(function()
