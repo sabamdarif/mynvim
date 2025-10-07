@@ -1,7 +1,7 @@
 ## Showcase
 
-<img src="./img/home.png">
-<img src="./img/code+tree.png">
+<img src="./.hidden/home.png">
+<img src="./.hidden/code+tree.png">
 
 ## Setup
 
