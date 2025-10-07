@@ -87,6 +87,7 @@ return {
                     },
                     menu = {
                         scrollbar = false,
+                        auto_show_delay_ms = 0,
                         draw = {
                             treesitter = { "lsp", "snippets", "buffer", "ripgrep", "path" },
                             padding = { 1, 1 },
