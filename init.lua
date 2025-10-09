@@ -12,7 +12,6 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require("base")
 -- load all plugins
 local specs = {
     { import = "plugins" },
@@ -78,6 +77,8 @@ local opts = {
 }
 
 require("lazy").setup(specs, opts)
+
+require("base")
 
 -- CRITICAL: Apply colorscheme AFTER all plugins load
 vim.schedule(function()
