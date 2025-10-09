@@ -1,19 +1,22 @@
+-- add custom bash filetypes
+vim.filetype.add({
+    filename = {
+        [".bashrc"] = "bash",
+        [".bash_profile"] = "bash",
+        [".shell_aliases"] = "bash",
+        [".shell_functions"] = "bash",
+        [".zshrc"] = "zsh",
+    },
+    pattern = {
+        [".*%.bash"] = "bash",
+        [".*%.zsh"] = "zsh",
+    },
+})
+
 -- Bash Language Configuration
 return {
     -- LSP servers to enable
     lsp_servers = { "bashls" },
-
-    -- LSP server-specific configurations
-    lsp_config = {
-        bashls = {
-            filetypes = { "sh", "bash", "zsh" },
-            settings = {
-                bashIde = {
-                    globPattern = "**/*@(.sh|.inc|.bash|.command|.zsh|.zshrc)",
-                },
-            },
-        },
-    },
 
     -- Formatters by filetype
     formatters = {
