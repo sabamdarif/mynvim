@@ -5,7 +5,7 @@ vim.filetype.add({
         [".bash_profile"] = "bash",
         [".shell_aliases"] = "bash",
         [".shell_functions"] = "bash",
-        [".zshrc"] = "zsh",
+        [".zshrc"] = "bash",
     },
     pattern = {
         [".*%.bash"] = "bash",
