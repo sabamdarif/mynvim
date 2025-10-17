@@ -1,7 +1,7 @@
 -- Python Language Configuration
 return {
     -- LSP servers to enable
-    lsp_servers = { "ruff" },
+    lsp_servers = { "pyright" },
 
     -- Formatters by filetype
     formatters = {
@@ -10,7 +10,8 @@ return {
 
     -- Mason packages to install
     mason_packages = {
-        "ruff", -- Optional: fast Python linter
+        "pyright",
+        "ruff",
     },
 
     -- Treesitter parsers
