@@ -25,6 +25,7 @@ opt.listchars = { -- Customize symbols for invisible characters
 }
 opt.wrap = true
 opt.winminwidth = 5
+opt.winborder = "rounded"
 
 -------------------------------------- Clipboard -----------------------------------
 opt.clipboard = vim.env.SSH_TTY and "" or "unnamedplus"
@@ -48,7 +49,7 @@ opt.splitkeep = "screen" -- Cursor stays visually in place when split opens.
 
 -------------------------------------- Undo / History ----------------------------
 opt.undofile = true  -- Save undo history to file
-opt.undolevels = 100 -- Maximum number of undos
+opt.undolevels = 500 -- Maximum number of undos
 
 -------------------------------------- Folding -------------------------------------
 opt.foldmethod = "indent"
