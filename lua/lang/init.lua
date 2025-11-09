@@ -15,6 +15,7 @@ local M = {
     lsp_servers = {},
     lsp_config = {},
     formatters = {},
+    formatters_config = {},
     mason_packages = {},
     treesitter_parsers = {},
     plugin_specs = {}, -- Collect all plugin specs
@@ -58,6 +59,13 @@ for _, lang in ipairs(languages) do
         if lang_config.formatters then
             for ft, formatters in pairs(lang_config.formatters) do
                 M.formatters[ft] = formatters
+            end
+        end
+
+        -- Merge custom formatter configurations
+        if lang_config.formatters_config then
+            for formatter, config in pairs(lang_config.formatters_config) do
+                M.formatters_config[formatter] = config
             end
         end
 
