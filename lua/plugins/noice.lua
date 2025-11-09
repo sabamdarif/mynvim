@@ -3,7 +3,6 @@ return {
     event = "VeryLazy",
     dependencies = {
         "MunifTanjim/nui.nvim",
-        "rcarriga/nvim-notify",
     },
     opts = {
         lsp = {
@@ -30,17 +29,4 @@ return {
             long_message_to_split = true,
         },
     },
-    config = function(_, opts)
-        if vim.o.filetype == "lazy" then
-            vim.cmd([[messages clear]])
-        end
-        require("noice").setup(opts)
-
-        -- set nvim-notify renderer to minimal
-        local notify = require("notify")
-        notify.setup({
-            render = "minimal",
-        })
-        vim.notify = notify
-    end,
 }
