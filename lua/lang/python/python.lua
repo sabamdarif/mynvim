@@ -5,14 +5,18 @@ return {
 
     -- Formatters by filetype
     formatters = {
-        python = { "ruff" },
+        python = { "ruff_format", "ruff_organize_imports" },
     },
 
     -- Custom formatter configurations (optional)
     formatters_config = {
-        ruff = {
-            -- Prepend additional arguments to the default ruff command
-            prepend_args = { "format", "--config", "lint.ignore=['F401']" },
+        ruff_format = {
+            -- Ruff format arguments
+            prepend_args = {},
+        },
+        ruff_organize_imports = {
+            -- Disable import organizing by making it do nothing
+            prepend_args = { "--select", "I001", "--fix" },
         },
     },
 
