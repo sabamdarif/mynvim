@@ -126,7 +126,7 @@ return {
                 fuzzy = {
                     implementation = "rust",
                     prebuilt_binaries = {
-                        force_version = "v1.7.0",
+                        force_version = "v1.8.0",
                     },
                     sorts = {
                         'exact',
