@@ -14,10 +14,6 @@ return {
             -- Ruff format arguments
             prepend_args = {},
         },
-        ruff_organize_imports = {
-            -- Disable import organizing by making it do nothing
-            prepend_args = { "--select", "I001", "--fix" },
-        },
     },
 
     -- Mason packages to install
