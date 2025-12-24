@@ -17,8 +17,6 @@ return {
         lua = { "stylua" },
     },
 
-    mason_packages = {
-        "lua-language-server",
-    },
+    mason_packages = { "lua-language-server", "stylua" },
     treesitter = { "lua" },
 }
