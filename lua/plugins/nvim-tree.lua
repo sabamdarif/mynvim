@@ -57,16 +57,49 @@ return {
             },
         },
     },
-    -- config = function(_, opts)
-    --     require("nvim-tree").setup(opts)
-    --
-    --     -- Statusline tweak for tree window
-    --     local nt_api = require("nvim-tree.api")
-    --     nt_api.events.subscribe(nt_api.events.Event.TreeOpen, function()
-    --         local tree_winid = nt_api.tree.winid()
-    --         if tree_winid ~= nil then
-    --             vim.api.nvim_set_option_value("statusline", "%t", { win = tree_winid })
-    --         end
-    --     end)
-    -- end,
+    config = function(_, opts)
+        require("nvim-tree").setup(opts)
+
+        -- Telescope integration
+        local api = require("nvim-tree.api")
+        local actions = require("telescope.actions")
+        local action_state = require("telescope.actions.state")
+
+        local view_selection = function(prompt_bufnr)
+            actions.select_default:replace(function()
+                actions.close(prompt_bufnr)
+                local selection = action_state.get_selected_entry()
+                local filename = selection.filename
+                if filename == nil then
+                    filename = selection[1]
+                end
+                api.tree.find_file(filename, { open = true, focus = true })
+                api.node.open.preview()
+            end)
+            return true
+        end
+
+        local function launch_telescope(func_name, opts)
+            local telescope_status_ok, _ = pcall(require, "telescope")
+            if not telescope_status_ok then
+                return
+            end
+            local node = api.tree.get_node_under_cursor()
+            local basedir = node.type == "directory" and node.absolute_path or vim.fn.fnamemodify(node.absolute_path, ":h")
+            opts = opts or {}
+            opts.cwd = basedir
+            opts.search_dirs = { basedir }
+            opts.attach_mappings = view_selection
+            return require("telescope.builtin")[func_name](opts)
+        end
+
+        -- keymaps
+        vim.keymap.set("n", "<c-f>", function()
+            launch_telescope("find_files")
+        end, { desc = "Find files from tree node" })
+
+        vim.keymap.set("n", "<c-fg>", function()
+            launch_telescope("live_grep")
+        end, { desc = "Live grep from tree node" })
+    end,
 }
