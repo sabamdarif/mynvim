@@ -1,5 +1,6 @@
 return {
     "nvim-treesitter/nvim-treesitter-textobjects",
+    branch = "main",
     event = { "BufReadPost", "BufNewFile" },
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     opts = {
@@ -28,7 +29,5 @@ return {
             },
         },
     },
-    config = function(_, opts)
-        require("nvim-treesitter.configs").setup(opts)
-    end,
 }
+
