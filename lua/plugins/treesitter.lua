@@ -1,7 +1,7 @@
 return {
     "nvim-treesitter/nvim-treesitter",
     branch = "main",
-    build = ":TSUpdate",
+    build = ":TSUpdate | TSInstallAll",
     event = { "BufReadPost", "BufNewFile" },
     opts = function()
         local lang_config = require("lang")
@@ -12,8 +12,6 @@ return {
             ensure_installed = lang_config.treesitter_parsers or {},
             -- List of parsers to ignore installing
             ignore_install = { "awk" },
-            highlight = { enable = true },
-            indent = { enable = true },
             incremental_selection = {
                 enable = true,
                 keymaps = {
@@ -26,4 +24,3 @@ return {
         }
     end,
 }
-
