@@ -35,6 +35,12 @@ return {
         "css",
         "markdown",
         "lua",
+        "sql",
+        "django",
+        "json",
+        "yaml",
+        "toml",
+        "docker",
         -- "c",
     },
 }

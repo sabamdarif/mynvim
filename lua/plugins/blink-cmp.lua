@@ -11,6 +11,15 @@ return {
             delete_check_events = "TextChanged",
         },
         config = function(_, opts)
+            -- Apply custom luasnip filetype extensions from lang configs
+            local status_ok, lang_config = pcall(require, "lang")
+            if status_ok and lang_config.luasnip_extends then
+                local luasnip = require("luasnip")
+                for ft, extends in pairs(lang_config.luasnip_extends) do
+                    luasnip.filetype_extend(ft, extends)
+                end
+            end
+
             -- vscode format
             require("luasnip.loaders.from_vscode").lazy_load { exclude = vim.g.vscode_snippets_exclude or {} }
             require("luasnip.loaders.from_vscode").lazy_load { paths = vim.g.vscode_snippets_path or "" }

@@ -1,9 +1,20 @@
 return {
-    lsp_servers = { "html" },
+    lsp_servers = { "html", "emmet_ls" },
 
     lsp_config = {
         html = {
             filetypes = { "html", "htmldjango" },
+        },
+        emmet_ls = {
+            filetypes = {
+                "html",
+                "htmldjango",
+                "css",
+                "scss",
+                "less",
+                "javascriptreact",
+                "typescriptreact",
+            },
         },
     },
 
@@ -13,6 +24,7 @@ return {
 
     mason_packages = {
         "html-lsp",
+        "emmet-ls",
         "prettier",
     },
 

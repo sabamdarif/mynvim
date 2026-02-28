@@ -8,6 +8,18 @@ return {
                     inlayHints = {
                         includeInlayParameterNameHints = "all",
                         includeInlayFunctionParameterTypeHints = true,
+                        includeInlayEnumMemberValueHints = true,
+                        includeInlayFunctionLikeReturnTypeHints = true,
+                        includeInlayPropertyDeclarationTypeHints = true,
+                    },
+                },
+                javascript = {
+                    inlayHints = {
+                        includeInlayParameterNameHints = "all",
+                        includeInlayFunctionParameterTypeHints = true,
+                        includeInlayEnumMemberValueHints = true,
+                        includeInlayFunctionLikeReturnTypeHints = true,
+                        includeInlayPropertyDeclarationTypeHints = true,
                     },
                 },
             },
@@ -26,5 +38,5 @@ return {
         "prettier",
     },
 
-    treesitter = { "javascript", "typescript", "tsx" },
+    treesitter = { "javascript", "typescript", "tsx", "jsdoc" },
 }

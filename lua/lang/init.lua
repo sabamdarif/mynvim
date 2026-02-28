@@ -18,6 +18,7 @@ local M = {
     formatters_config = {},
     mason_packages = {},
     treesitter_parsers = {},
+    luasnip_extends = {},
     plugin_specs = {}, -- Collect all plugin specs
 }
 
@@ -80,6 +81,16 @@ for _, lang in ipairs(languages) do
         if lang_config.treesitter then
             for _, parser in ipairs(lang_config.treesitter) do
                 table.insert(M.treesitter_parsers, parser)
+            end
+        end
+
+        -- Merge luasnip extends
+        if lang_config.luasnip_extends then
+            for ft, extends in pairs(lang_config.luasnip_extends) do
+                M.luasnip_extends[ft] = M.luasnip_extends[ft] or {}
+                for _, ext in ipairs(extends) do
+                    table.insert(M.luasnip_extends[ft], ext)
+                end
             end
         end
     else

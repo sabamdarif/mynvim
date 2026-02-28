@@ -1,27 +1,31 @@
--- Python Language Configuration
 return {
-    -- LSP servers to enable
-    lsp_servers = { "pyright" },
+    lsp_servers = { "pyright", "ruff" },
 
-    -- Formatters by filetype
+    lsp_config = {
+        ruff = {
+            cmd_env = { RUFF_TRACE = "messages" },
+            init_options = {
+                settings = {
+                    logLevel = "error",
+                },
+            },
+        },
+    },
+
     formatters = {
         python = { "ruff_format", "ruff_organize_imports" },
     },
 
-    -- Custom formatter configurations (optional)
     formatters_config = {
         ruff_format = {
-            -- Ruff format arguments
             prepend_args = {},
         },
     },
 
-    -- Mason packages to install
     mason_packages = {
         "pyright",
         "ruff",
     },
 
-    -- Treesitter parsers
     treesitter = { "python" },
 }

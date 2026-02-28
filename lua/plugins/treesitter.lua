@@ -5,12 +5,21 @@ return {
     event = { "BufReadPost", "BufNewFile" },
     opts = function()
         local lang_config = require("lang")
+        local base_parsers = {
+            "diff",
+            "printf",
+            "query",
+            "regex",
+            "vim",
+            "vimdoc",
+            "xml",
+            "luadoc",
+            "luap",
+        }
+        local parsers = vim.list_extend(base_parsers, lang_config.treesitter_parsers or {})
         return {
-            -- Automatically install missing parsers when entering buffer
             auto_install = true,
-            -- Install parsers from language configs
-            ensure_installed = lang_config.treesitter_parsers or {},
-            -- List of parsers to ignore installing
+            ensure_installed = parsers,
             ignore_install = { "awk" },
             incremental_selection = {
                 enable = true,

@@ -12,11 +12,7 @@ return {
         local capabilities = vim.lsp.protocol.make_client_capabilities()
 
         -- Merge blink.cmp capabilities
-        capabilities = vim.tbl_deep_extend(
-            "force",
-            capabilities,
-            require("blink.cmp").get_lsp_capabilities({}, false)
-        )
+        capabilities = vim.tbl_deep_extend("force", capabilities, require("blink.cmp").get_lsp_capabilities({}, false))
 
         -- Merge custom capabilities: folding range + workspace file operations
         capabilities = vim.tbl_deep_extend("force", capabilities, {
@@ -80,6 +76,9 @@ return {
             if client:supports_method("textDocument/semanticTokens") then
                 client.server_capabilities.semanticTokensProvider = nil
             end
+            if client.name == "ruff" then
+                client.server_capabilities.hoverProvider = false
+            end
         end
 
         -- Setup keymaps on LspAttach
@@ -95,8 +94,7 @@ return {
                 vim.keymap.set("n", "gD", vim.lsp.buf.declaration, map_opts("Go to declaration"))
                 vim.keymap.set("n", "gd", vim.lsp.buf.definition, map_opts("Go to definition"))
                 vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, map_opts("Add workspace folder"))
-                vim.keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder,
-                    map_opts("Remove workspace folder"))
+                vim.keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, map_opts("Remove workspace folder"))
                 vim.keymap.set("n", "<leader>wl", function()
                     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
                 end, map_opts("List workspace folders"))
@@ -107,10 +105,7 @@ return {
 
                 -- Inlay hints
                 if opts.inlay_hints.enabled and client:supports_method("textDocument/inlayHint") then
-                    if vim.api.nvim_buf_is_valid(bufnr)
-                        and vim.bo[bufnr].buftype == ""
-                        and not vim.tbl_contains(opts.inlay_hints.exclude, vim.bo[bufnr].filetype)
-                    then
+                    if vim.api.nvim_buf_is_valid(bufnr) and vim.bo[bufnr].buftype == "" and not vim.tbl_contains(opts.inlay_hints.exclude, vim.bo[bufnr].filetype) then
                         vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
                     end
                 end
