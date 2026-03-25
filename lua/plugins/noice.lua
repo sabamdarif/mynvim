@@ -29,5 +29,8 @@ return {
         presets = {
             long_message_to_split = true,
         },
+        notify = {
+            enabled = false,
+        },
     },
 }
