@@ -36,7 +36,6 @@ return {
         "markdown",
         "lua",
         "sql",
-        "django",
         "json",
         "yaml",
         "toml",
