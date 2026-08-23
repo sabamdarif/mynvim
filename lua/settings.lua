@@ -40,6 +40,6 @@ return {
         "yaml",
         "toml",
         "docker",
-        -- "c",
+        "c",
     },
 }
