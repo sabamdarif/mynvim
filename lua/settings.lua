@@ -30,7 +30,7 @@ return {
         "bash",
         "git",
         "python",
-        "javascript",
+        "typescript",
         "html",
         "css",
         "markdown",
