@@ -8,5 +8,5 @@ return {
         "CRFiletype",
         "CRProjects",
     },
-    config = true
+    config = true,
 }

@@ -25,10 +25,7 @@ M.install_all = function()
 
         if #to_install > 0 then
             vim.cmd("MasonInstall " .. table.concat(to_install, " "))
-            vim.notify(
-                "Mason: Installing " .. #to_install .. " packages: " .. table.concat(to_install, ", "),
-                vim.log.levels.INFO
-            )
+            vim.notify("Mason: Installing " .. #to_install .. " packages: " .. table.concat(to_install, ", "), vim.log.levels.INFO)
         else
             vim.notify("Mason: All packages already installed", vim.log.levels.INFO)
         end

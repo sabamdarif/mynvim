@@ -3,7 +3,7 @@ return {
     event = "VeryLazy",
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
-        signs = true,      -- show icons in the signs column
+        signs = true, -- show icons in the signs column
         sign_priority = 8, -- sign priority
         -- keywords recognized as todo comments
         keywords = {
@@ -27,7 +27,7 @@ return {
             info = { "DiagnosticInfo", "#2563EB" },
             hint = { "DiagnosticHint", "#10B981" },
             default = { "Identifier", "#7C3AED" },
-            test = { "Identifier", "#FF00FF" }
+            test = { "Identifier", "#FF00FF" },
         },
     },
 }

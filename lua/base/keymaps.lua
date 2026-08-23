@@ -41,12 +41,7 @@ map({ "n", "v", "i" }, "<C-n>", "<cmd>NvimTreeToggle<CR>", { remap = true, desc 
 
 -- ============  Telescope Mappings =============
 map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Find files" })
-map(
-    "n",
-    "<leader>fa",
-    "<cmd>Telescope find_files follow=true no_ignore=true hidden=true<CR>",
-    { desc = "Find all files" }
-)
+map("n", "<leader>fa", "<cmd>Telescope find_files follow=true no_ignore=true hidden=true<CR>", { desc = "Find all files" })
 map("n", "<leader>fg", "<cmd>Telescope live_grep<CR>", { desc = "Grep through files" })
 map("n", "<leader>fb", "<cmd>Telescope buffers<CR>", { desc = "List open buffers" })
 map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "Help tags" })
@@ -55,12 +50,7 @@ map("n", "<leader>ma", "<cmd>Telescope marks<CR>", { desc = "Jump to marks" })
 map("n", "<leader>cm", "<cmd>Telescope git_commits<CR>", { desc = "Git commits" })
 map("n", "<leader>gt", "<cmd>Telescope git_status<CR>", { desc = "Git status" })
 map("n", "<leader>pt", "<cmd>Telescope terms<CR>", { desc = "Hidden terminals" })
-map(
-    "n",
-    "<leader>f",
-    "<cmd>Telescope current_buffer_fuzzy_find<CR>",
-    { desc = "Fuzzy search current buffer", noremap = true }
-)
+map("n", "<leader>f", "<cmd>Telescope current_buffer_fuzzy_find<CR>", { desc = "Fuzzy search current buffer", noremap = true })
 map("n", "<leader>th", function()
     require("telescope.builtin").colorscheme({ enable_preview = true })
 end, { desc = "Choose colorscheme with preview" })
@@ -162,12 +152,7 @@ map("n", "[t", function()
     require("todo-comments").jump_prev()
 end, { desc = "Previous Todo Comment" })
 map("n", "<leader>xt", "<cmd>Trouble todo toggle<cr>", { desc = "Todo (Trouble)" })
-map(
-    "n",
-    "<leader>xT",
-    "<cmd>Trouble todo toggle filter = {tag = {TODO,FIX,FIXME}}<cr>",
-    { desc = "Todo/Fix/Fixme (Trouble)" }
-)
+map("n", "<leader>xT", "<cmd>Trouble todo toggle filter = {tag = {TODO,FIX,FIXME}}<cr>", { desc = "Todo/Fix/Fixme (Trouble)" })
 map("n", "<leader>st", "<cmd>TodoTelescope<cr>", { desc = "Todo" })
 map("n", "<leader>sT", "<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>", { desc = "Todo/Fix/Fixme" })
 

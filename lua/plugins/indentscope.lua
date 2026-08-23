@@ -7,13 +7,20 @@ return {
             symbol = "▏",
             draw = {
                 delay = 700,
-                animation = function() return 0 end,
+                animation = function()
+                    return 0
+                end,
             },
         },
         init = function()
             local excluded_fts = {
-                "help", "lazy", "mason", "notify",
-                "alpha", "NvimTree", "toggleterm",
+                "help",
+                "lazy",
+                "mason",
+                "notify",
+                "alpha",
+                "NvimTree",
+                "toggleterm",
             }
             vim.api.nvim_create_autocmd("FileType", {
                 pattern = excluded_fts,

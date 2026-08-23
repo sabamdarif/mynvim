@@ -6,11 +6,11 @@ return {
     "nvim-treesitter/nvim-treesitter-context",
     event = { "BufReadPost", "BufNewFile" }, -- Changed from "LazyFile"
     opts = {
-        enable = true,                    -- Enable this plugin (Can be enabled/disabled later via commands)
-        max_lines = 5,                    -- How many lines the window should span. Values <= 0 mean no limit.
+        enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
+        max_lines = 5, -- How many lines the window should span. Values <= 0 mean no limit.
         line_numbers = true,
-        multiline_threshold = 5,          -- Maximum number of lines to show for a single context
-        zindex = 10,                      -- The Z-index of the context window
+        multiline_threshold = 5, -- Maximum number of lines to show for a single context
+        zindex = 10, -- The Z-index of the context window
     },
     keys = {
         {

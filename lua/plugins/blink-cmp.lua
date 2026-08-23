@@ -21,16 +21,16 @@ return {
             end
 
             -- vscode format
-            require("luasnip.loaders.from_vscode").lazy_load { exclude = vim.g.vscode_snippets_exclude or {} }
-            require("luasnip.loaders.from_vscode").lazy_load { paths = vim.g.vscode_snippets_path or "" }
+            require("luasnip.loaders.from_vscode").lazy_load({ exclude = vim.g.vscode_snippets_exclude or {} })
+            require("luasnip.loaders.from_vscode").lazy_load({ paths = vim.g.vscode_snippets_path or "" })
 
             -- snipmate format
             require("luasnip.loaders.from_snipmate").load()
-            require("luasnip.loaders.from_snipmate").lazy_load { paths = vim.g.snipmate_snippets_path or "" }
+            require("luasnip.loaders.from_snipmate").lazy_load({ paths = vim.g.snipmate_snippets_path or "" })
 
             -- lua format
             require("luasnip.loaders.from_lua").load()
-            require("luasnip.loaders.from_lua").lazy_load { paths = vim.g.lua_snippets_path or "" }
+            require("luasnip.loaders.from_lua").lazy_load({ paths = vim.g.lua_snippets_path or "" })
         end,
     },
     {
@@ -44,13 +44,13 @@ return {
                 version = "*",
             },
         },
-        version = '1.*',
+        version = "1.*",
         opts = function()
             local menu_cols = { { "label" }, { "kind_icon" }, { "kind" } }
             local menu_components = {
                 kind_icon = {
                     text = function(ctx)
-                        local icons = require "icons.lspkind"
+                        local icons = require("icons.lspkind")
                         local icon = (icons[ctx.kind] or "󰈚")
                         if ctx.source_name == "Path" then
                             local dev_icon, _ = require("nvim-web-devicons").get_icon(ctx.label)
@@ -135,9 +135,9 @@ return {
                 fuzzy = {
                     implementation = "rust",
                     sorts = {
-                        'exact',
-                        'score',
-                        'sort_text',
+                        "exact",
+                        "score",
+                        "sort_text",
                         "label",
                         "kind",
                     },

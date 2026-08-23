@@ -131,10 +131,10 @@ function M.setup()
     })
 
     -- Make :bd and :q behave as usual when nvim-tree is visible
-    vim.api.nvim_create_autocmd({ 'BufEnter', 'QuitPre' }, {
+    vim.api.nvim_create_autocmd({ "BufEnter", "QuitPre" }, {
         nested = false,
         callback = function(e)
-            local tree = require('nvim-tree.api').tree
+            local tree = require("nvim-tree.api").tree
 
             -- Nothing to do if tree is not opened
             if not tree.is_visible() then
@@ -150,13 +150,13 @@ function M.setup()
             end
 
             -- We want to quit and only one window besides tree is left
-            if e.event == 'QuitPre' and winCount == 2 then
-                vim.api.nvim_cmd({ cmd = 'qall' }, {})
+            if e.event == "QuitPre" and winCount == 2 then
+                vim.api.nvim_cmd({ cmd = "qall" }, {})
             end
 
             -- :bd was probably issued an only tree window is left
             -- Behave as if tree was closed (see `:h :bd`)
-            if e.event == 'BufEnter' and winCount == 1 then
+            if e.event == "BufEnter" and winCount == 1 then
                 -- Required to avoid "Vim:E444: Cannot close last window"
                 vim.defer_fn(function()
                     -- close nvim-tree: will go to the last buffer used before closing
@@ -165,7 +165,7 @@ function M.setup()
                     tree.toggle({ find_file = true, focus = false })
                 end, 10)
             end
-        end
+        end,
     })
 
     -- Autocmd to refresh highlight when colorscheme changes
@@ -188,26 +188,25 @@ function M.setup()
     -- })
 end
 
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "*",
+    callback = function()
+        pcall(vim.treesitter.start)
+    end,
+})
 
-    vim.api.nvim_create_autocmd("FileType", {
-        pattern = "*",
-        callback = function()
-            pcall(vim.treesitter.start)
-        end,
-    })
+local create_cmd = vim.api.nvim_create_user_command
 
-    local create_cmd = vim.api.nvim_create_user_command
+create_cmd("TSInstallAll", function()
+    local spec = require("lazy.core.config").plugins["nvim-treesitter"]
+    local opts = type(spec.opts) == "table" and spec.opts or {}
+    local parsers = opts.ensure_installed or {}
 
-    create_cmd("TSInstallAll", function()
-        local spec = require("lazy.core.config").plugins["nvim-treesitter"]
-        local opts = type(spec.opts) == "table" and spec.opts or {}
-        local parsers = opts.ensure_installed or {}
+    if type(spec.opts) == "function" then
+        opts = spec.opts()
+    end
 
-        if type(spec.opts) == "function" then
-            opts = spec.opts()
-        end
+    require("nvim-treesitter.install").install(opts.ensure_installed)
+end, {})
 
-        require("nvim-treesitter.install").install(opts.ensure_installed)
-    end, {})
-
-    return M
+return M
