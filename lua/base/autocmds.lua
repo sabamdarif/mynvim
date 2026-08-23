@@ -188,25 +188,7 @@ function M.setup()
     -- })
 end
 
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "*",
-    callback = function()
-        pcall(vim.treesitter.start)
-    end,
-})
-
-local create_cmd = vim.api.nvim_create_user_command
-
-create_cmd("TSInstallAll", function()
-    local spec = require("lazy.core.config").plugins["nvim-treesitter"]
-    local opts = type(spec.opts) == "table" and spec.opts or {}
-    local parsers = opts.ensure_installed or {}
-
-    if type(spec.opts) == "function" then
-        opts = spec.opts()
-    end
-
-    require("nvim-treesitter.install").install(opts.ensure_installed)
-end, {})
+-- Treesitter highlighting and the :TSInstallAll command are owned by
+-- lua/plugins/treesitter.lua (the `main` branch needs both done explicitly).
 
 return M
