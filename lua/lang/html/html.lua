@@ -15,6 +15,16 @@ return {
                 "javascriptreact",
                 "typescriptreact",
             },
+            -- Emmet's jsx profile leaves output.selfClosingStyle at "html", so
+            -- void tags expand unclosed: `inp` -> `<input type="text">`. xhtml
+            -- makes it `<input type="text" />`, which is what JSX needs.
+            init_options = {
+                jsx = {
+                    options = {
+                        ["output.selfClosingStyle"] = "xhtml",
+                    },
+                },
+            },
         },
     },
 

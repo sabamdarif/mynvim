@@ -1,6 +1,5 @@
 ## Showcase
 
-<img src="./.hidden/home.png">
 <img src="./.hidden/code+tree.png">
 
 ## Setup

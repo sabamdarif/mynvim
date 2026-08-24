@@ -3,28 +3,18 @@ return {
 
     lsp_config = {
         jsonls = {
-            before_init = function(_, new_config)
-                new_config.settings.json.schemas = new_config.settings.json.schemas or {}
-                vim.list_extend(new_config.settings.json.schemas, require("schemastore").json.schemas())
+            -- Feed the server SchemaStore's catalogue (see plugins.lua)
+            before_init = function(_, config)
+                config.settings.json.schemas = vim.list_extend(
+                    config.settings.json.schemas or {},
+                    require("schemastore").json.schemas()
+                )
             end,
-            settings = {
-                json = {
-                    format = { enable = true },
-                    validate = { enable = true },
-                },
-            },
+            settings = { json = {} },
         },
     },
 
-    formatters = {
-        json = { "prettier" },
-        jsonc = { "prettier" },
-    },
-
-    mason_packages = {
-        "json-lsp",
-        "prettier",
-    },
-
+    formatters = { json = { "prettier" }, jsonc = { "prettier" } },
+    mason_packages = { "json-lsp", "prettier" },
     treesitter = { "json", "jsonc", "json5" },
 }

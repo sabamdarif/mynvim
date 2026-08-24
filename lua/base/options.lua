@@ -1,77 +1,67 @@
-local opt = vim.opt
 local o = vim.o
-local g = vim.g
+local opt = vim.opt
 
--------------------------------------- UI ------------------------------------------
+-- UI
 o.laststatus = 3
 o.showmode = false
-opt.termguicolors = true
-opt.cursorline = true
+o.termguicolors = true
+o.cursorline = true
 o.cursorlineopt = "both"
-opt.fillchars = { eob = " " }
-opt.signcolumn = "yes"
+o.number = true
+o.numberwidth = 2
 o.ruler = false
-opt.number = true
-opt.numberwidth = 2
-opt.pumblend = 10
-opt.pumheight = 10
-opt.scrolloff = 4
-opt.sidescrolloff = 8
-opt.list = true -- Show invisible characters like tabs/spaces
-opt.listchars = { -- Customize symbols for invisible characters
-    tab = ". ", -- Tabs shown as ▸
-    trail = "_", -- Trailing spaces shown as ·
-    nbsp = "␣", -- Non-breaking space shown as ␣
-}
-opt.wrap = true
-opt.winminwidth = 5
-opt.winborder = "rounded"
-
--------------------------------------- Clipboard -----------------------------------
-opt.clipboard = vim.env.SSH_TTY and "" or "unnamedplus"
-
--------------------------------------- Indentation ---------------------------------
-o.shiftwidth = 4 -- Indent width
-o.tabstop = 4 -- Tab width
-o.softtabstop = 4 -- Soft tab stop
-o.expandtab = true -- Convert tabs to spaces
-o.smartindent = true -- Automatically inserts indents in some contexts
-o.autoindent = true -- Copy indent from previous line
-
--------------------------------------- Search --------------------------------------
-o.ignorecase = true -- Ignore case when searching --> Example: /hello matches "Hello" or "HELLO".
-o.smartcase = true
-
--------------------------------------- Mouse ---------------------------------------
-o.mouse = "a"
-
--------------------------------------- Splits --------------------------
-opt.splitkeep = "screen" -- Cursor stays visually in place when split opens.
-
--------------------------------------- Undo / History ----------------------------
-opt.undofile = true -- Save undo history to file
-opt.undolevels = 500 -- Maximum number of undos
-
--------------------------------------- Folding -------------------------------------
-opt.foldmethod = "indent"
-opt.foldlevel = 99
-
--------------------------------------- Editor behavior ---------------------------
-opt.formatoptions = "jcroqlnt" -- Control formatting behaviour --> Example: Auto-wrap comments, remove trailing spaces, etc.
-opt.grepformat = "%f:%l:%c:%m"
-opt.grepprg = "rg --vimgrep"
-opt.inccommand = "nosplit"
-opt.jumpoptions = "view"
-opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" }
-opt.showmatch = true -- Highlight matching brackets
-opt.confirm = true -- Ask before closing unsaved files
-opt.virtualedit = "block"
-opt.wildmode = "longest:full,full"
-opt.smoothscroll = true
-opt.spelllang = { "en" }
+o.signcolumn = "yes"
+o.pumblend = 10
+o.pumheight = 10
+o.scrolloff = 4
+o.sidescrolloff = 8
+o.smoothscroll = true
+o.winborder = "rounded"
+opt.fillchars = { eob = " " }
 opt.shortmess:append({ s = true, I = true, W = true, c = true, C = true })
 
--------------------------------------- File safety (local config) ---------------------------------
-o.exrc = true -- It will allow to use project's local .nvim.lua file
-o.secure = true -- Ask you if you want to trust project's .nvim.lua file
-g.editorconfig = true -- To make Neovim respect your .editorconfig settings
+-- Invisible characters. `leadmultispace` draws the static indent guides;
+-- mini.indentscope draws the active one and turns both off where they'd be noise.
+o.list = true
+opt.listchars = { tab = ". ", trail = "_", nbsp = "␣", leadmultispace = "▏   " }
+
+-- Indentation: 4 spaces, .editorconfig wins where a project has one
+o.expandtab = true
+o.shiftwidth = 4
+o.tabstop = 4
+o.softtabstop = 4
+o.smartindent = true
+
+-- Search / grep
+o.ignorecase = true
+o.smartcase = true
+o.inccommand = "nosplit"
+o.grepprg = "rg --vimgrep"
+o.grepformat = "%f:%l:%c:%m"
+
+-- Editing
+o.mouse = "a"
+o.clipboard = vim.env.SSH_TTY and "" or "unnamedplus"
+o.confirm = true -- prompt instead of failing when abandoning an unsaved buffer
+o.showmatch = true
+o.splitkeep = "screen"
+o.undofile = true
+o.undolevels = 500
+o.virtualedit = "block"
+o.jumpoptions = "view"
+o.wildmode = "longest:full,full"
+o.formatoptions = "jcroqlnt"
+o.wrap = true
+
+-- Folding: treesitter everywhere, swapped for the LSP's own ranges where a
+-- server offers foldingRange (see plugins/lspconfig.lua). Both expressions
+-- return 0 when unavailable, so a buffer with no parser just gets no folds.
+o.foldmethod = "expr"
+o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+o.foldlevel = 99
+o.foldtext = "" -- keep syntax highlighting on the folded line
+
+-- Per-project .nvim.lua, with a trust prompt
+o.exrc = true
+o.secure = true
+vim.g.editorconfig = true

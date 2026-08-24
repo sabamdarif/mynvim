@@ -2,34 +2,11 @@ return {
     lsp_servers = { "cssls" },
 
     lsp_config = {
-        cssls = {
-            settings = {
-                css = {
-                    validate = true,
-                    lint = {
-                        unknownAtRules = "ignore",
-                    },
-                },
-                scss = {
-                    validate = true,
-                },
-                less = {
-                    validate = true,
-                },
-            },
-        },
+        -- Don't flag tailwind/postcss directives such as @apply
+        cssls = { settings = { css = { lint = { unknownAtRules = "ignore" } } } },
     },
 
-    formatters = {
-        css = { "prettier" },
-        scss = { "prettier" },
-        less = { "prettier" },
-    },
-
-    mason_packages = {
-        "css-lsp",
-        "prettier",
-    },
-
+    formatters = { css = { "prettier" }, scss = { "prettier" }, less = { "prettier" } },
+    mason_packages = { "css-lsp", "prettier" },
     treesitter = { "css", "scss" },
 }

@@ -75,8 +75,7 @@ return {
                 -- namespace used by nvim-lspconfig's bundled tsc config
                 ["js/ts"] = {
                     inlayHints = inlay_hints,
-                    -- client-side codelens is disabled globally (see lspconfig.lua),
-                    -- so don't ask the server to compute them
+                    -- nothing refreshes codelens on the client side
                     referencesCodeLens = { enabled = false },
                     implementationsCodeLens = { enabled = false },
                 },

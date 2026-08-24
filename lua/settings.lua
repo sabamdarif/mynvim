@@ -1,45 +1,24 @@
--- ╔══════════════════════════════════════════════════════════════════════════════╗
--- ║                         NEOVIM SETTINGS                                      ║
--- ║                                                                              ║
--- ║  Centralized configuration for colorscheme and language support              ║
--- ╚══════════════════════════════════════════════════════════════════════════════╝
-
+-- The only file you should need to touch day to day.
 return {
-    -- ═══════════════════════════════════════════════════════════════════════════
-    --                           COLORSCHEME SELECTION
-    -- ═══════════════════════════════════════════════════════════════════════════
-    -- Uncomment the colorscheme you want to use (only one at a time)
-
+    -- One of the keys in lua/colorschemes.lua.
     colorscheme = "tokyodark",
-    -- colorscheme = "catppuccin",
-    -- colorscheme = "nightfox",
-    -- colorscheme = "gruvbox",
 
-    -- ═══════════════════════════════════════════════════════════════════════════
-    --                         LANGUAGE CONFIGURATION
-    -- ═══════════════════════════════════════════════════════════════════════════
-    --          Add or remove languages here
-    -- Each language folder in lua/lang/ contains:
-    --   - <lang>.lua: LSP servers, formatters, treesitter parsers
-    --   - plugins.lua: Language-specific plugins (optional)
-    --
-    -- To enable a language: Add it to the list below
-    -- To disable a language: Comment it out or remove it
-
+    -- Each entry needs a lua/lang/<name>/<name>.lua (LSP servers, formatters,
+    -- mason packages, treesitter parsers) and optionally a plugins.lua.
     languages = {
         "bash",
-        "git",
-        "python",
-        "typescript",
-        "html",
-        "css",
-        "markdown",
-        "lua",
-        "sql",
-        "json",
-        "yaml",
-        "toml",
-        "docker",
         "c",
+        "css",
+        "docker",
+        "git",
+        "html",
+        "json",
+        "lua",
+        "markdown",
+        "python",
+        "sql",
+        "toml",
+        "typescript",
+        "yaml",
     },
 }

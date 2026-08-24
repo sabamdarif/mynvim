@@ -1,4 +1,4 @@
--- add custom bash filetypes
+-- Dotfiles nvim doesn't recognise on its own
 vim.filetype.add({
     filename = {
         [".bashrc"] = "bash",
@@ -13,25 +13,9 @@ vim.filetype.add({
     },
 })
 
--- Bash Language Configuration
 return {
-    -- LSP servers to enable
     lsp_servers = { "bashls" },
-
-    -- Formatters by filetype
-    formatters = {
-        sh = { "shfmt" },
-        bash = { "shfmt" },
-        zsh = { "shfmt" },
-    },
-
-    -- Mason packages to install
-    mason_packages = {
-        "bash-language-server",
-        "shfmt",
-        "shellcheck",
-    },
-
-    -- Treesitter parsers
+    formatters = { sh = { "shfmt" }, bash = { "shfmt" }, zsh = { "shfmt" } },
+    mason_packages = { "bash-language-server", "shfmt", "shellcheck" },
     treesitter = { "bash" },
 }

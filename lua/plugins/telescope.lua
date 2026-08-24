@@ -2,9 +2,6 @@ return {
     "nvim-telescope/telescope.nvim",
     dependencies = {
         "nvim-lua/plenary.nvim",
-        -- Fuzzy Finder Algorithm which requires local dependencies to be built.
-        -- Only load if `make` is available. Make sure you have the system
-        -- requirements installed.
         {
             "nvim-telescope/telescope-fzf-native.nvim",
             build = "make",
@@ -16,9 +13,9 @@ return {
         "nvim-tree/nvim-web-devicons",
     },
     cmd = "Telescope",
-    opts = function()
+    config = function()
         local actions = require("telescope.actions")
-        return {
+        require("telescope").setup({
             defaults = {
                 prompt_prefix = "  ",
                 selection_caret = " ",
@@ -36,10 +33,9 @@ return {
                     n = { ["q"] = actions.close },
                 },
             },
-            extensions_list = { "themes", "terms" },
-            extensions = {
-                fzf = {},
-            },
-        }
+        })
+
+        pcall(require("telescope").load_extension, "fzf")
+        pcall(require("telescope").load_extension, "ui-select")
     end,
 }

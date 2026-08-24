@@ -1,60 +1,46 @@
--- nvim-treesitter `main` branch.
--- Unlike the old `master` branch, setup() accepts ONLY `install_dir`: there is no
--- `ensure_installed`, `auto_install`, `highlight` or `incremental_selection`.
--- Installing parsers and starting the highlighter are therefore done explicitly here.
+-- Parsers worth having in any project, on top of whatever lua/lang/ asks for.
+local base_parsers = { "diff", "printf", "query", "regex", "vim", "vimdoc", "xml", "luadoc", "luap" }
 
-local base_parsers = {
-    "diff",
-    "printf",
-    "query",
-    "regex",
-    "vim",
-    "vimdoc",
-    "xml",
-    "luadoc",
-    "luap",
-}
-
+-- Parsers we never start, even when they are installed.
 local ignore = { awk = true }
 
--- A parser is usable if it is on the rtp: either installed by nvim-treesitter
--- into its install_dir, or bundled with Neovim itself (c, lua, markdown, query,
--- vim, vimdoc). Checking the rtp avoids reinstalling the bundled ones.
-local function parser_present(lang)
+-- Set false to keep Neovim's built-in indent scripts instead.
+local ts_indent = true
+
+local function have(lang)
     return #vim.api.nvim_get_runtime_file("parser/" .. lang .. ".*", false) > 0
 end
 
--- Every parser this config wants, from the base list + enabled languages.
-local function wanted_parsers()
-    local wanted = vim.deepcopy(base_parsers)
-    vim.list_extend(wanted, require("lang").treesitter_parsers or {})
-
-    local seen, out = {}, {}
-    for _, lang in ipairs(wanted) do
-        if not seen[lang] and not ignore[lang] then
-            seen[lang] = true
-            table.insert(out, lang)
-        end
-    end
-    return out
+-- Every parser we want, deduplicated.
+local function wanted()
+    local seen = {}
+    return vim.tbl_filter(function(lang)
+        local skip = ignore[lang] or seen[lang]
+        seen[lang] = true
+        return not skip
+    end, vim.iter({ base_parsers, require("lang").treesitter_parsers }):flatten():totable())
 end
 
--- Turn on treesitter highlighting (and treesitter-based folds/indent) for a buffer.
-local function start(bufnr)
-    if not vim.api.nvim_buf_is_valid(bufnr) or vim.bo[bufnr].buftype ~= "" then
+-- Highlighting and indentation for one buffer, if its parser is installed.
+-- Folding comes from the global foldexpr set in base/options.lua.
+local function attach(buf)
+    if not vim.api.nvim_buf_is_valid(buf) or vim.bo[buf].buftype ~= "" then
         return
     end
-    local lang = vim.treesitter.language.get_lang(vim.bo[bufnr].filetype)
-    if not lang or ignore[lang] or not parser_present(lang) then
+    local lang = vim.treesitter.language.get_lang(vim.bo[buf].filetype)
+    if not lang or ignore[lang] or not have(lang) then
         return
     end
-    pcall(vim.treesitter.start, bufnr, lang)
+    pcall(vim.treesitter.start, buf, lang)
+    if ts_indent and vim.treesitter.query.get(lang, "indents") then
+        vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    end
 end
 
-local function start_all_loaded()
-    for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-        if vim.api.nvim_buf_is_loaded(bufnr) then
-            start(bufnr)
+local function attach_all()
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_is_loaded(buf) then
+            attach(buf)
         end
     end
 end
@@ -74,46 +60,44 @@ return {
             available[lang] = true
         end
 
-        -- Install any wanted parser that isn't usable yet, then highlight.
-        local missing = vim.tbl_filter(function(lang)
-            return available[lang] and not parser_present(lang)
-        end, wanted_parsers())
-
-        if #missing > 0 then
-            vim.notify("treesitter: installing " .. #missing .. " parsers: " .. table.concat(missing, ", "), vim.log.levels.INFO)
-            nts.install(missing, { summary = true }):await(function()
-                vim.schedule(start_all_loaded)
+        -- Install whichever of `langs` is missing, then run `done`.
+        local function install(langs, done)
+            langs = vim.tbl_filter(function(lang)
+                return available[lang] and not have(lang)
+            end, langs)
+            if #langs == 0 then
+                return
+            end
+            vim.notify("treesitter: installing " .. table.concat(langs, ", "))
+            nts.install(langs, { summary = true }):await(function()
+                vim.schedule(done or attach_all)
             end)
         end
 
-        -- Highlight every buffer, installing on demand (replaces `auto_install`).
+        install(wanted())
+
+        -- Attach on every buffer, installing on demand (replaces `auto_install`).
         vim.api.nvim_create_autocmd("FileType", {
-            group = vim.api.nvim_create_augroup("treesitter_start", { clear = true }),
+            group = vim.api.nvim_create_augroup("treesitter_attach", { clear = true }),
             callback = function(ev)
                 local lang = vim.treesitter.language.get_lang(vim.bo[ev.buf].filetype)
                 if not lang or ignore[lang] then
                     return
                 end
-                if parser_present(lang) then
-                    start(ev.buf)
-                elseif available[lang] then
-                    nts.install({ lang }):await(function()
-                        vim.schedule(function()
-                            start(ev.buf)
-                        end)
+                if have(lang) then
+                    attach(ev.buf)
+                else
+                    install({ lang }, function()
+                        attach(ev.buf)
                     end)
                 end
             end,
         })
 
-        -- This plugin loads on BufReadPost, after FileType already fired for the
-        -- first buffer, so cover what is already open.
-        start_all_loaded()
+        attach_all()
 
         vim.api.nvim_create_user_command("TSInstallAll", function()
-            nts.install(wanted_parsers(), { summary = true }):await(function()
-                vim.schedule(start_all_loaded)
-            end)
-        end, { desc = "Install all treesitter parsers for enabled languages" })
+            install(wanted())
+        end, { desc = "Install treesitter parsers for the enabled languages" })
     end,
 }
